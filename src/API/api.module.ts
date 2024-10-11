@@ -1,19 +1,19 @@
 import { Module } from '@nestjs/common';
-import { EmpresaModule } from './empresa/empresa.module';
-import { SedeModule } from './sede/sede.module';
-import { EmpleadoModule } from './empleado/empleado.module';
-import { ClienteModule } from './cliente/cliente.module';
-import { ProveedorModule } from './proveedor/proveedor.module';
-import { UsuarioModule } from './usuario/usuario.module';
+import { CompanyModule } from './empresa/company.module';
+import { HeadquarterModule } from './sede/headquarter.module';
+import { EmployeeModule } from './empleado/employee.module';
+import { CostumerModule } from './cliente/costumer.module';
+import { SupplierModule } from './proveedor/supplier.module';
+import { UserModule } from './usuario/user.module';
 
 @Module({
   imports: [
-    EmpresaModule,
-    SedeModule,
-    EmpleadoModule,
-    ClienteModule,
-    ProveedorModule,
-    UsuarioModule
+    CompanyModule,
+    EmployeeModule,
+    CostumerModule,
+    UserModule,
+    SupplierModule,
+    HeadquarterModule,
   ],
 })
 export class ApiModule {}

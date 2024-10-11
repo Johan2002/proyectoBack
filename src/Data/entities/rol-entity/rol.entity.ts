@@ -1,29 +1,28 @@
 import {
   Column,
   Entity,
-  JoinColumn,
   JoinTable,
   ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
-import { Usuario } from '../usuario-entity/usuario.entity';
-import { Permiso } from '../permiso-entity/permiso.entity';
+import { User } from '../user-entity/user.entity';
+import { Permission } from '../permission-entity/permisson.entity';
 
 @Entity()
-@Unique(['nombre'])
+@Unique(['name'])
 export class Rol {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  rolId: string;
 
   @Column({ type: 'varchar' })
-  nombre: string;
+  name: string;
 
-  @OneToMany(() => Usuario, (usuario) => usuario.rol)
-  usuario: Array<Usuario>;
+  @OneToMany(() => User, (user) => user.rol)
+  user: Array<User>;
 
-  @ManyToMany(() => Permiso, (permiso) => permiso.rol)
-  @JoinTable({name: 'permiso_rol'})
-  permiso: Array<Permiso>;
+  @ManyToMany(() => Permission, (permission) => permission.rol)
+  @JoinTable({name: 'permission_rol'})
+  permission: Array<Permission>;
 }
