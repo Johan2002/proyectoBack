@@ -11,7 +11,7 @@ import { User } from '../user-entity/user.entity';
 import { Permission } from '../permission-entity/permisson.entity';
 
 @Entity()
-@Unique(['name'])
+@Unique(['rolName'])
 export class Rol {
   @PrimaryGeneratedColumn('uuid')
   rolId: string;

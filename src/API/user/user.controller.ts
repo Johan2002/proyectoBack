@@ -11,32 +11,27 @@ export class UserController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async createUsuario(
-    @Body('userName') userName: string,
-    @Body('password') password: string,
-    @Body('employeeId') employeeId: string,
-    @Body('rolId') rolId: string,
-  ): Promise<User> {
-    return this.userService.create(userName, password, employeeId, rolId);
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.userService.create(createUserDto);
   }
 
   @Get()
-  async getAll(): Promise<User[]> {
+  findAll() {
     return this.userService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+    return this.userService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+    return this.userService.update(id, updateUserDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+    return this.userService.remove(id);
   }
 }

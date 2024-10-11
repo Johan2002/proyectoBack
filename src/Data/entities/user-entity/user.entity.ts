@@ -14,7 +14,7 @@ import { Employee } from '../employee-entity/employee.entity';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  UserId: string;
+  userId: string;
 
   @Column({ type: 'varchar', unique: true})
   userName: string;
@@ -27,7 +27,7 @@ export class User {
 
   @OneToOne(() => Employee, (employee) => employee.user)
   @JoinColumn()
-  employee: Employee;
+  employee?: Employee;
 
   @ManyToOne(() => Rol, (rol) => rol.user)
   rol: Rol;
