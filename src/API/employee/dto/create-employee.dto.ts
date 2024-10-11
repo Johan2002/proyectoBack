@@ -1,9 +1,9 @@
 export class CreateEmployeeDto {
-  id: number;
-  cedula: string;
-  nombre: string;
-  direccion: string;
-  telefono: number;
-  correo: string;
-  sede: string;
+  employeeId: string;
+  identity: string;
+  name: string;
+  address: string;
+  phone: string;
+  email: string;
+  headquarter: string;
 }

@@ -12,12 +12,12 @@ export class UserController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async createUsuario(
-    @Body('userName') nombre: string,
-    @Body('contraseña') contraseña: string,
+    @Body('userName') userName: string,
+    @Body('password') password: string,
     @Body('employeeId') employeeId: string,
     @Body('rolId') rolId: string,
   ): Promise<User> {
-    return this.userService.create(nombre, contraseña, employeeId, rolId);
+    return this.userService.create(userName, password, employeeId, rolId);
   }
 
   @Get()

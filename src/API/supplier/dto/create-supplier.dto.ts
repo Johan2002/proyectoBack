@@ -1,7 +1,8 @@
 export class CreateSupplierDto {
-  id: number;
-  nombre: string;
-  direccion: string;
-  telefono: number;
-  correo: string;
+  supplierId: string;
+  nit: string;
+  name: string;
+  address: string;
+  phone: string;
+  email: string;
 }

@@ -17,7 +17,13 @@ export class Rol {
   rolId: string;
 
   @Column({ type: 'varchar' })
-  name: string;
+  rolName: string;
+
+  @Column({ type: 'varchar' })
+  rolDescription: string;
+
+  @Column({ type: 'boolean' })
+  rolStatus: boolean;
 
   @OneToMany(() => User, (user) => user.rol)
   user: Array<User>;

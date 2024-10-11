@@ -3,8 +3,8 @@ import { Rol } from "src/Data/entities/rol-entity/rol.entity";
 
 export interface IUser {
 
-  id: number;
-  name: string;
+  userId: string;
+  userName: string;
   email: string;
   password: string;
   employee: Employee;
@@ -12,6 +12,6 @@ export interface IUser {
   
 }
 
-export type ICreateUser = Pick<IUser,'name'|'email'|'password'> & {
+export type ICreateUser = Pick<IUser,'userName'|'email'|'password'> & {
   // empleado: Pick<IEmpleado, 'id'>
 }

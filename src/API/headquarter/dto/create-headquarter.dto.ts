@@ -1,7 +1,7 @@
 export class CreateHeadquarterDto {
-  id: number;
-  nombre: string;
-  direccion: string;
-  empresas: string;
-  empleados: string;
+  headquarterId: string;
+  name: string;
+  address: string;
+  companys: string;
+  employees: string;
 }

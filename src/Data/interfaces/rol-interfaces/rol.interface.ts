@@ -3,8 +3,10 @@ import { User } from "src/Data/entities/user-entity/user.entity";
 
 export interface IRol{
 
-  rolId: number;
-  name: string;
+  rolId: string;
+  rolName: string;
+  rolDescription: string;
+  rolStatus: boolean;
   user: Array<User>;
   permission: Array<Permission>;
   
