@@ -63,6 +63,7 @@ export class UserService {
     return await this.userRepository.find();
   }
 
+  //Método para listar usuario por uuid
   async findOne(id: string): Promise<IUser> {
     const user = await this.userRepository.findOne({ where: { userId: id } });
     if (!user) {
@@ -71,6 +72,7 @@ export class UserService {
     return user;
   }
 
+  //Método para actualizar a usuarios
   async update(id: string, updateUserDto: UpdateUserDto): Promise<IUser> {
     const user = await this.userRepository.findOne({ where: { userId: id } });
     if (!user) {
@@ -82,8 +84,9 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
+  //Método para borrar a usuarios
   async remove(id: string) {
     await this.findOne(id);
-    return await this.userRepository.softDelete(id);
+    return await this.userRepository.delete(id);
   }
 }
