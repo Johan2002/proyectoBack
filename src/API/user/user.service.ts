@@ -28,13 +28,21 @@ export class UserService {
 
   // Método para crear un nuevo usuario
   async create(createUserDto: CreateUserDto): Promise<IUser> {
-    const { rol: rolId, employee: employeeId, userId, password, ...userData } = createUserDto;
+    const {
+      rol: rolId,
+      employee: employeeId,
+      userId,
+      password,
+      ...userData
+    } = createUserDto;
 
     const rol = await this.rolRepository.findOne({ where: { rolId } });
     if (!rol) {
       throw new NotFoundException('Rol not found');
     }
-    const employee = await this.employeeRepository.findOne({ where: { employeeId } });
+    const employee = await this.employeeRepository.findOne({
+      where: { employeeId },
+    });
     if (!employee) {
       throw new NotFoundException('Employee not found');
     }
