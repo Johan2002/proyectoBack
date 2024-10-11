@@ -5,12 +5,13 @@ export interface IUser {
 
   id: number;
   name: string;
+  email: string;
   password: string;
   employee: Employee;
   rol: Rol;
   
 }
 
-export type ICreateUser = Pick<IUser,'name'|'password'> & {
+export type ICreateUser = Pick<IUser,'name'|'email'|'password'> & {
   // empleado: Pick<IEmpleado, 'id'>
 }

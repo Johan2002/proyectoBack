@@ -12,7 +12,7 @@ export class UserController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async createUsuario(
-    @Body('nombre') nombre: string,
+    @Body('userName') nombre: string,
     @Body('contraseña') contraseña: string,
     @Body('employeeId') employeeId: string,
     @Body('rolId') rolId: string,

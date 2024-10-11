@@ -7,7 +7,6 @@ import {
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
-  Unique,
 } from 'typeorm';
 import { Rol } from '../rol-entity/rol.entity';
 import { Employee } from '../employee-entity/employee.entity';
@@ -19,6 +18,9 @@ export class User {
 
   @Column({ type: 'varchar', unique: true})
   userName: string;
+
+  @Column({ type: 'varchar', unique: true})
+  email: string;
 
   @Column({ type: 'varchar' })
   password: string;

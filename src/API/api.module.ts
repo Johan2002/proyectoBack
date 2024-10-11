@@ -1,10 +1,10 @@
+import { SupplierModule } from './supplier/supplier.module';
+import { CostumerModule } from './costumer/costumer.module';
+import { EmployeeModule } from './employee/employee.module';
+import { HeadquarterModule } from './headquarter/headquarter.module';
+import { CompanyModule } from './company/company.module';
+import { UserModule } from './user/user.module';
 import { Module } from '@nestjs/common';
-import { CompanyModule } from './empresa/company.module';
-import { HeadquarterModule } from './sede/headquarter.module';
-import { EmployeeModule } from './empleado/employee.module';
-import { CostumerModule } from './cliente/costumer.module';
-import { SupplierModule } from './proveedor/supplier.module';
-import { UserModule } from './usuario/user.module';
 
 @Module({
   imports: [
