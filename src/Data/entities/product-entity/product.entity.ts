@@ -32,10 +32,14 @@ export class Product {
   @Column({ type: 'varchar' })
   description: string;
 
-  @ManyToOne(() => Supplier, (supplier) => supplier.products)
+  @ManyToOne(() => Supplier, (supplier) => supplier.products, {
+    onDelete: 'SET NULL',
+  })
   supplier: Supplier;
 
-  @OneToMany(() => Sale, (sale) => sale.product)
+  @OneToMany(() => Sale, (sale) => sale.product, {
+    onDelete: 'SET NULL',
+  })
   sales: Array<Sale>;
 
   @CreateDateColumn({ type: 'timestamp' })

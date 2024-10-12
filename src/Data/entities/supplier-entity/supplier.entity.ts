@@ -33,10 +33,14 @@ export class Supplier {
   @Column({ type: 'varchar' })
   email: string;
 
-  @ManyToOne(() => Company, (company) => company.suppliers)
+  @ManyToOne(() => Company, (company) => company.suppliers, {
+    onDelete: 'SET NULL',
+  })
   company: Company;
 
-  @OneToMany(() => Product, (product) => product.supplier)
+  @OneToMany(() => Product, (product) => product.supplier, {
+    onDelete: 'SET NULL',
+  })
   @JoinColumn()
   products: Array<Product>;
 

@@ -35,10 +35,14 @@ export class Costumer {
   @Column({ type: 'varchar' })
   email: string;
 
-  @ManyToOne(() => Company, (company) => company.costumers)
+  @ManyToOne(() => Company, (company) => company.costumers, {
+    onDelete: 'SET NULL',
+  })
   company: Company;
 
-  @OneToMany(() => Sale, (sale) => sale.costumer)
+  @OneToMany(() => Sale, (sale) => sale.costumer, {
+    onDelete: 'SET NULL',
+  })
   sales: Array<Sale>;
 
   @CreateDateColumn({ type: 'timestamp' })

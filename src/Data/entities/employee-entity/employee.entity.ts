@@ -34,13 +34,19 @@ export class Employee {
   @Column({ type: 'varchar', unique: true })
   email: string;
 
-  @ManyToOne(() => Headquarter, (headquarters) => headquarters.employee)
+  @ManyToOne(() => Headquarter, (headquarters) => headquarters.employee, {
+    onDelete: 'SET NULL',
+  })
   headquarters: Headquarter;
 
-  @OneToMany(() => Sale, (sale) => sale.employee)
+  @OneToMany(() => Sale, (sale) => sale.employee, {
+    onDelete: 'SET NULL',
+  })
   sales: Array<Sale>;
 
-  @OneToOne(() => User, (user) => user.employee)
+  @OneToOne(() => User, (user) => user.employee, {
+    onDelete: 'SET NULL',
+  })
   user: User;
 
   @CreateDateColumn({ type: 'timestamp' })

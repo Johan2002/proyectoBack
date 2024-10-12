@@ -4,7 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { LoggingInterceptor } from './interceptor/typeorm-logging.interceptor';
+// import { LoggingInterceptor } from './interceptor/typeorm-logging.interceptor';
 import { TypeOrmConfigAsync } from './Data/database-config/type-orm-config';
 
 @Module({
@@ -12,10 +12,10 @@ import { TypeOrmConfigAsync } from './Data/database-config/type-orm-config';
   controllers: [AppController],
   providers: [
     AppService,
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: LoggingInterceptor,
-    },
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: LoggingInterceptor,
+    // },
   ],
 })
 export class AppModule {}

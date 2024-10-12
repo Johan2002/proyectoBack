@@ -6,7 +6,6 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -15,7 +14,7 @@ import { Costumer } from '../costumer-entity/costumer.entity';
 @Entity()
 export class Company {
   @PrimaryGeneratedColumn('uuid')
-  CompanyId: string;
+  companyId: string;
 
   @Column({ type: 'varchar', unique: true })
   nit: string;
@@ -29,18 +28,24 @@ export class Company {
   @Column({ type: 'varchar', unique: true })
   phone: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', unique: true })
   email: string;
 
-  @OneToMany(() => Headquarter, (headquarters) => headquarters.company)
+  @OneToMany(() => Headquarter, (headquarters) => headquarters.company, {
+    onDelete: 'SET NULL',
+  })
   @JoinColumn()
   headquarters: Array<Headquarter>;
 
-  @OneToMany(() => Supplier, (supplier) => supplier.company)
+  @OneToMany(() => Supplier, (supplier) => supplier.company, {
+    onDelete: 'SET NULL',
+  })
   @JoinColumn()
   suppliers: Array<Supplier>;
 
-  @OneToMany(() => Costumer, (costumer) => costumer.company)
+  @OneToMany(() => Costumer, (costumer) => costumer.company, {
+    onDelete: 'SET NULL',
+  })
   @JoinColumn()
   costumers: Array<Costumer>;
 

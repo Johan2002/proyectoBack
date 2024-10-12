@@ -14,6 +14,8 @@ export class Permission {
   @Column({ type: 'varchar' })
   name: string;
 
-  @ManyToMany(() => Rol, (rol) => rol.permission)
+  @ManyToMany(() => Rol, (rol) => rol.permission, {
+    onDelete: 'SET NULL',
+  })
   rol: Array<Rol>;
 }

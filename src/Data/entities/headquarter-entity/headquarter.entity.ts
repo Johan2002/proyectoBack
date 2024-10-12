@@ -22,10 +22,14 @@ export class Headquarter {
   @Column({ type: 'varchar' })
   address: string;
 
-  @ManyToOne(() => Company, (company) => company.headquarters)
+  @ManyToOne(() => Company, (company) => company.headquarters, {
+    onDelete: 'SET NULL',
+  })
   company: Company;
 
-  @OneToMany(() => Employee, (employee) => employee.headquarters)
+  @OneToMany(() => Employee, (employee) => employee.headquarters, {
+    onDelete: 'SET NULL',
+  })
   @JoinColumn()
   employee: Employee;
 

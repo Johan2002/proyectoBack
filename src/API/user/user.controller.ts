@@ -26,11 +26,13 @@ export class UserController {
   }
 
   @Get()
+  @HttpCode(HttpStatus.FOUND)
   findAll() {
     return this.userService.findAll();
   }
 
   @Get(':id')
+  @HttpCode(HttpStatus.FOUND)
   findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
   }

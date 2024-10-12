@@ -28,15 +28,21 @@ export class Sale {
   @CreateDateColumn({ type: 'timestamp' })
   date_sale: Date;
 
-  @ManyToOne(() => Employee, (employee) => employee.sales)
+  @ManyToOne(() => Employee, (employee) => employee.sales, {
+    onDelete: 'SET NULL',
+  })
   @JoinColumn()
   employee: Employee;
 
-  @ManyToOne(() => Costumer, (costumer) => costumer.sales)
+  @ManyToOne(() => Costumer, (costumer) => costumer.sales, {
+    onDelete: 'SET NULL',
+  })
   @JoinColumn()
   costumer: Costumer;
 
-  @ManyToOne(() => Product, (product) => product.sales)
+  @ManyToOne(() => Product, (product) => product.sales, {
+    onDelete: 'SET NULL',
+  })
   @JoinColumn()
   product: Product;
 

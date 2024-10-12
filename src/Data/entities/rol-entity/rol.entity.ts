@@ -25,10 +25,14 @@ export class Rol {
   @Column({ type: 'boolean' })
   rolStatus: boolean;
 
-  @OneToMany(() => User, (user) => user.rol)
+  @OneToMany(() => User, (user) => user.rol, {
+    onDelete: 'SET NULL',
+  })
   user: Array<User>;
 
-  @ManyToMany(() => Permission, (permission) => permission.rol)
+  @ManyToMany(() => Permission, (permission) => permission.rol, {
+    onDelete: 'SET NULL',
+  })
   @JoinTable({name: 'permission_rol'})
   permission: Array<Permission>;
 }

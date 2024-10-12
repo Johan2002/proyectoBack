@@ -25,11 +25,15 @@ export class User {
   @Column({ type: 'varchar' })
   password: string;
 
-  @OneToOne(() => Employee, (employee) => employee.user)
+  @OneToOne(() => Employee, (employee) => employee.user, {
+    onDelete: 'SET NULL',
+  })
   @JoinColumn()
-  employee?: Employee;
+  employee: Employee;
 
-  @ManyToOne(() => Rol, (rol) => rol.user)
+  @ManyToOne(() => Rol, (rol) => rol.user, {
+    onDelete: 'SET NULL',
+  })
   rol: Rol;
 
   @CreateDateColumn({ type: 'timestamp' })

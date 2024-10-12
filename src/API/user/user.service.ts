@@ -31,7 +31,6 @@ export class UserService {
     const {
       rol: rolId,
       employee: employeeId,
-      userId,
       password,
       ...userData
     } = createUserDto;
@@ -84,6 +83,6 @@ export class UserService {
 
   async remove(id: string) {
     await this.findOne(id);
-    return await this.userRepository.softDelete(id);
+    return await this.userRepository.delete(id);
   }
 }
