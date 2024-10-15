@@ -1,7 +1,16 @@
+import { IsNotEmpty, IsString } from 'class-validator';
+
 export class CreateHeadquarterDto {
   headquarterId: string;
+
+  @IsString()
+  @IsNotEmpty()
   name: string;
+  
+  @IsString()
+  @IsNotEmpty()
   address: string;
-  companys: string;
-  employees: string;
+
+  company: string;
+
 }

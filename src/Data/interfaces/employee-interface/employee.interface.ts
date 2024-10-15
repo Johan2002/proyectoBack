@@ -1,6 +1,3 @@
-import { Headquarter } from "src/Data/entities/headquarter-entity/headquarter.entity";
-import { Sale } from "src/Data/entities/sale-entity/sale.entity";
-import { User } from "src/Data/entities/user-entity/user.entity";
 import { IHeadquarter } from "../headquarter-interface/headquarter.interface";
 import { IUser } from "../user-interface/user.interface";
 import { ISale } from "../sale-interface/sale.interface";
@@ -14,11 +11,14 @@ export interface IEmployee {
   address: string;
   phone: string;
   email: string;
-  headquarters: IHeadquarter;
+  headquarter: IHeadquarter;
   sales: Array<ISale>;
   user: IUser;
   
 }
 
 export type ICreateEmployee = Pick<IEmployee,'identity'|'name'|'lastname'|'email'|'address'|'phone'> & {
+  headquarter: Pick<IHeadquarter, 'headquarterId'>;
+  sales: Array<Pick<ISale, 'saleId'>>;
+  user: Pick<IUser, 'userId'>;
 }

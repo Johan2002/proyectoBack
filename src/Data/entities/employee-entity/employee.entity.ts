@@ -34,10 +34,10 @@ export class Employee {
   @Column({ type: 'varchar', unique: true })
   email: string;
 
-  @ManyToOne(() => Headquarter, (headquarters) => headquarters.employee, {
+  @ManyToOne(() => Headquarter, (headquarter) => headquarter.employees, {
     onDelete: 'SET NULL',
   })
-  headquarters: Headquarter;
+  headquarter: Headquarter;
 
   @OneToMany(() => Sale, (sale) => sale.employee, {
     onDelete: 'SET NULL',

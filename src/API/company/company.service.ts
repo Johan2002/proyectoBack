@@ -28,37 +28,17 @@ export class CompanyService {
       ...companyData
     } = createCompanyDto;
 
-    try {
+    const newCompany = this.companyRepository.create({
+      ...companyData,
+    });
 
-      const newCompany = this.companyRepository.create({
-        ...companyData,
-      });
-
-      // if (
-      //   createCompanyDto.nit &&
-      //   createCompanyDto.name &&
-      //   createCompanyDto.email &&
-      //   createCompanyDto.phone
-      // ) {
-      //   throw new NotFoundException(
-      //     'El nit, nombre, email o telefono ya están registrados en el sistema',
-      //   );
-      // }
-
-      return this.companyRepository.save(newCompany);
-    } catch (error) {
-      logger.error('Error al crear la empresa en la base de datos', error);
-
-      throw new NotFoundException(
-        'Error al crear la empresa: ' + error.message,
-      );
-    }
+    return this.companyRepository.save(newCompany);
   }
 
   async findAll(): Promise<Array<ICompany>> {
     const logger: Logger = new Logger('TypeOrmConfig');
-    logger.log('Buscando empresa en base de datos....');
-    logger.log('Empresa encontrada en base de datos....');
+    logger.log('Buscando empresas en base de datos....');
+    logger.log('Empresas encontradas en base de datos....');
     return await this.companyRepository.find({
       relations: ['headquarters', 'suppliers', 'costumers'],
     });

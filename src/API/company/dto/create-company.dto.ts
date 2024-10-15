@@ -16,6 +16,7 @@ export class CreateCompanyDto {
   address: string;
 
   @IsPhoneNumber('CO')
+  @IsNotEmpty()
   phone: string;
 
   @IsEmail()

@@ -13,7 +13,7 @@ import {
 import { Product } from '../product-entity/product.entity';
 
 @Entity()
-@Unique(['name', 'phone', 'email', 'nit', 'company'])
+@Unique(['name', 'phone', 'address', 'email', 'nit', 'company'])
 export class Supplier {
   @PrimaryGeneratedColumn('uuid')
   supplierId: string;
@@ -36,7 +36,7 @@ export class Supplier {
   @ManyToOne(() => Company, (company) => company.suppliers, {
     onDelete: 'SET NULL',
   })
-  company: Company;
+  company: Array<Company>;
 
   @OneToMany(() => Product, (product) => product.supplier, {
     onDelete: 'SET NULL',

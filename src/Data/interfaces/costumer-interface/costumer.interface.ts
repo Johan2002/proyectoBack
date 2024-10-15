@@ -14,3 +14,8 @@ export interface ICostumer {
   sales: Array<ISale>;
   
 }
+
+export type ICreateCostumer = Pick<ICostumer, 'identity' | 'name' | 'lastname'|'phone'|'email'>&{
+  company: Pick<ICompany, 'companyId'>;
+  sales: Array<Pick<ISale, 'saleId'>>;
+}

@@ -16,10 +16,10 @@ export class Headquarter {
   @PrimaryGeneratedColumn('uuid')
   headquarterId: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', unique: true })
   name: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', unique: true })
   address: string;
 
   @ManyToOne(() => Company, (company) => company.headquarters, {
@@ -27,11 +27,11 @@ export class Headquarter {
   })
   company: Company;
 
-  @OneToMany(() => Employee, (employee) => employee.headquarters, {
+  @OneToMany(() => Employee, (employees) => employees.headquarter, {
     onDelete: 'SET NULL',
   })
   @JoinColumn()
-  employee: Employee;
+  employees: Array<Employee>;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;

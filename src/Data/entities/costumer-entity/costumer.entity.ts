@@ -37,6 +37,7 @@ export class Costumer {
 
   @ManyToOne(() => Company, (company) => company.costumers, {
     onDelete: 'SET NULL',
+    nullable: true,
   })
   company: Company;
 
