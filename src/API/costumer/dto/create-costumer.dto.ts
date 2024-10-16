@@ -1,8 +1,6 @@
 import { IsEmail, IsNotEmpty, IsPhoneNumber, IsString } from 'class-validator';
 
 export class CreateCostumerDto {
-  costumerId: string;
-
   @IsString()
   @IsNotEmpty()
   identity: string;

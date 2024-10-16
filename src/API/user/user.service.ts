@@ -11,7 +11,7 @@ import { User } from 'src/Data/entities/user-entity/user.entity';
 import { Repository } from 'typeorm';
 import { Employee } from 'src/Data/entities/employee-entity/employee.entity';
 import * as bcrypt from 'bcrypt';
-import { IUser } from 'src/Data/interfaces/user-interface/user.interface';
+import { IUser } from 'src/Data/interfaces/api/user-interface/user.interface';
 
 @Injectable()
 export class UserService {
@@ -47,7 +47,7 @@ export class UserService {
     }
 
     const hashpassword = await bcrypt.hash(password, 10);
-    const newUser = await this.userRepository.create({
+    const newUser = this.userRepository.create({
       ...userData,
       password: hashpassword,
       employee: employee,
@@ -55,6 +55,10 @@ export class UserService {
     });
 
     return this.userRepository.save(newUser);
+  }
+
+  findOneByEmail(email: string) {
+    return this.userRepository.findOneBy({ email });
   }
 
   //Método para listar todos los usuarios

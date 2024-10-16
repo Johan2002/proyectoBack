@@ -1,7 +1,6 @@
 import { IsEmail, IsNotEmpty, IsPhoneNumber, IsString } from "class-validator";
 
 export class CreateSupplierDto {
-  supplierId: string;
   @IsString()
   @IsNotEmpty()
   nit: string;

@@ -13,3 +13,8 @@ export interface IProduct {
   sales: Array<ISale>;
 
 }
+
+export type ICreateProduct = Pick<IProduct, 'code'|'name'|'price'|'amount'|'description'>&{
+  supplier: Pick<ISupplier, 'supplierId'>;
+  sales: Array<Pick<ISale, 'saleId'>>;
+}

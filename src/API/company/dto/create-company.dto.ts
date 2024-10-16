@@ -1,8 +1,6 @@
 import { IsEmail, IsNotEmpty, IsPhoneNumber, IsString } from 'class-validator';
 
 export class CreateCompanyDto {
-  companyId: string;
-
   @IsString()
   @IsNotEmpty()
   nit: string;

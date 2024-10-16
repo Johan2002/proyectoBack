@@ -8,7 +8,7 @@ import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ICompany } from 'src/Data/interfaces/company-interface/company.interface';
+import { ICompany } from 'src/Data/interfaces/api/company-interface/company.interface';
 import { Company } from 'src/Data/entities/company-entity/company.entity';
 
 @Injectable()
@@ -19,8 +19,6 @@ export class CompanyService {
   ) {}
 
   async create(createCompanyDto: CreateCompanyDto): Promise<ICompany> {
-    const logger: Logger = new Logger('TypeOrmConfig');
-    logger.log('Creando empresa en base de datos....');
     const {
       headquarters: headquarterId,
       suppliers: supplierId,
@@ -36,9 +34,6 @@ export class CompanyService {
   }
 
   async findAll(): Promise<Array<ICompany>> {
-    const logger: Logger = new Logger('TypeOrmConfig');
-    logger.log('Buscando empresas en base de datos....');
-    logger.log('Empresas encontradas en base de datos....');
     return await this.companyRepository.find({
       relations: ['headquarters', 'suppliers', 'costumers'],
     });

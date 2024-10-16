@@ -11,7 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Headquarter } from 'src/Data/entities/headquarter-entity/headquarter.entity';
 import { Repository } from 'typeorm';
 import { Company } from 'src/Data/entities/company-entity/company.entity';
-import { IHeadquarter } from 'src/Data/interfaces/headquarter-interface/headquarter.interface';
+import { IHeadquarter } from 'src/Data/interfaces/api/headquarter-interface/headquarter.interface';
 
 @Injectable()
 export class HeadquarterService {
@@ -24,17 +24,15 @@ export class HeadquarterService {
   async create(
     createHeadquarterDto: CreateHeadquarterDto,
   ): Promise<IHeadquarter> {
-    const logger: Logger = new Logger('TypeOrmConfig');
-    logger.log('Creando sede en base de datos....');
     const { company: companyId, ...headquarterData } = createHeadquarterDto;
     const company = await this.companyRepository.findOne({
       where: { companyId },
     });
     if (!company) {
-      throw new NotFoundException('La empresa no se encuentra en el sistema');
+      throw new NotFoundException('The company is not in the system.');
     }
 
-    const newHeadquarter = await this.headquarterRepository.create({
+    const newHeadquarter = this.headquarterRepository.create({
       company,
       ...headquarterData,
     });
@@ -42,9 +40,6 @@ export class HeadquarterService {
   }
 
   async findAll(): Promise<Array<IHeadquarter>> {
-    const logger: Logger = new Logger('TypeOrmConfig');
-    logger.log('Buscando sedes en base de datos....');
-    logger.log('Sedes encontrados en base de datos....');
     return await this.headquarterRepository.find({
       relations: ['employees', 'company'],
     });
@@ -56,7 +51,7 @@ export class HeadquarterService {
       relations: ['company', 'sales'],
     });
     if (!headquarter) {
-      throw new BadRequestException('Sede no encontrado.');
+      throw new BadRequestException('Headquarter not found.');
     }
     return headquarter;
   }
@@ -69,7 +64,7 @@ export class HeadquarterService {
       where: { headquarterId: id },
     });
     if (!headquarter) {
-      throw new BadRequestException('Sede no encontrado.');
+      throw new BadRequestException('Headquarter not found.');
     }
 
     Object.assign(headquarter, updateHeadquarterDto);

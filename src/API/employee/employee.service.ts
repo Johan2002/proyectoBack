@@ -10,7 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Employee } from 'src/Data/entities/employee-entity/employee.entity';
 import { Repository } from 'typeorm';
 import { Headquarter } from 'src/Data/entities/headquarter-entity/headquarter.entity';
-import { IEmployee } from 'src/Data/interfaces/employee-interface/employee.interface';
+import { IEmployee } from 'src/Data/interfaces/api/employee-interface/employee.interface';
 
 @Injectable()
 export class EmployeeService {
@@ -21,8 +21,6 @@ export class EmployeeService {
     private readonly headquarterReposiroty: Repository<Headquarter>,
   ) {}
   async create(createEmployeeDto: CreateEmployeeDto): Promise<IEmployee> {
-    const logger: Logger = new Logger('TypeOrmConfig');
-    logger.log('Creando empleado en base de datos....');
     const { headquarter: headquarterId, ...employeeData } = createEmployeeDto;
     let headquarter = null;
 
@@ -32,11 +30,11 @@ export class EmployeeService {
       });
 
       if (!headquarter) {
-        throw new NotFoundException('La empresa no se encuentra en el sistema');
+        throw new NotFoundException('The headquarters is not in the system.');
       }
     }
 
-    const newEmployee = await this.employeeRespository.create({
+    const newEmployee = this.employeeRespository.create({
       headquarter,
       ...employeeData,
     });
@@ -44,9 +42,6 @@ export class EmployeeService {
   }
 
   async findAll(): Promise<Array<IEmployee>> {
-    const logger: Logger = new Logger('TypeOrmConfig');
-    logger.log('Buscando empleados en base de datos....');
-    logger.log('Empleados encontrados en base de datos....');
     return await this.employeeRespository.find({
       relations: ['headquarter', 'sales', 'user'],
     });
@@ -58,7 +53,7 @@ export class EmployeeService {
       relations: ['headquarter', 'sales', 'user'],
     });
     if (!employee) {
-      throw new BadRequestException('Empleado no encontrado.');
+      throw new BadRequestException('Employee not found.');
     }
     return employee;
   }
@@ -71,7 +66,7 @@ export class EmployeeService {
       where: { employeeId: id },
     });
     if (!employee) {
-      throw new BadRequestException('Empleado no encontrado.');
+      throw new BadRequestException('Employee not found.');
     }
 
     Object.assign(employee, updateEmployeeDto);

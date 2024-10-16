@@ -12,12 +12,12 @@ import { Supplier } from '../supplier-entity/supplier.entity';
 import { Sale } from '../sale-entity/sale.entity';
 
 @Entity()
-@Unique(['code', 'name'])
+@Unique(['code', 'name', 'supplier'])
 export class Product {
   @PrimaryGeneratedColumn('uuid')
   productId: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', nullable: true })
   code: string;
 
   @Column({ type: 'varchar' })
@@ -37,7 +37,7 @@ export class Product {
   })
   supplier: Supplier;
 
-  @OneToMany(() => Sale, (sale) => sale.product, {
+  @OneToMany(() => Sale, (sale) => sale.products, {
     onDelete: 'SET NULL',
   })
   sales: Array<Sale>;

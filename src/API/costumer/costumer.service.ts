@@ -11,7 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Costumer } from 'src/Data/entities/costumer-entity/costumer.entity';
 import { Repository } from 'typeorm';
 import { Company } from 'src/Data/entities/company-entity/company.entity';
-import { ICostumer } from 'src/Data/interfaces/costumer-interface/costumer.interface';
+import { ICostumer } from 'src/Data/interfaces/api/costumer-interface/costumer.interface';
 
 @Injectable()
 export class CostumerService {
@@ -22,8 +22,6 @@ export class CostumerService {
     private readonly companyRepository: Repository<Company>,
   ) {}
   async create(createCostumerDto: CreateCostumerDto): Promise<ICostumer> {
-    const logger: Logger = new Logger('TypeOrmConfig');
-    logger.log('Creando cliente en base de datos....');
     const { company: companyId, ...costumerData } = createCostumerDto;
     let company = null;
 
@@ -32,11 +30,11 @@ export class CostumerService {
         where: { companyId },
       });
       if (!company) {
-        throw new NotFoundException('La empresa no se encuentra en el sistema');
+        throw new NotFoundException('The company is not in the system.');
       }
     }
 
-    const newCostumer = await this.costumerRepository.create({
+    const newCostumer = this.costumerRepository.create({
       company,
       ...costumerData,
     });
@@ -44,9 +42,6 @@ export class CostumerService {
   }
 
   async findAll(): Promise<Array<ICostumer>> {
-    const logger: Logger = new Logger('TypeOrmConfig');
-    logger.log('Buscando clientes en base de datos....');
-    logger.log('Clientes encontrados en base de datos....');
     return await this.costumerRepository.find({
       relations: ['company', 'sales'],
     });
@@ -58,7 +53,7 @@ export class CostumerService {
       relations: ['company', 'sales'],
     });
     if (!costumer) {
-      throw new BadRequestException('Cliente no encontrado.');
+      throw new BadRequestException('Customer not found.');
     }
     return costumer;
   }
@@ -71,7 +66,7 @@ export class CostumerService {
       where: { costumerId: id },
     });
     if (!costumer) {
-      throw new BadRequestException('Cliente no encontrado.');
+      throw new BadRequestException('Customer not found.');
     }
 
     Object.assign(costumer, updateCostumerDto);

@@ -1,4 +1,4 @@
-import { IUser } from '../../Data/interfaces/user-interface/user.interface';
+import { IUser } from '../../Data/interfaces/api/user-interface/user.interface';
 import {
   Controller,
   Get,
