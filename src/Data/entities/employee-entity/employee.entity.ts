@@ -16,42 +16,35 @@ export class Employee {
   @PrimaryGeneratedColumn('uuid')
   employeeId: string;
 
-  @Column({ type: 'varchar', unique: true })
-  identity: string;
+  @Column({ type: 'varchar', nullable: false, unique: true })
+  employeeIdentity: string;
 
-  @Column({ type: 'varchar' })
-  name: string;
+  @Column({ type: 'varchar', nullable: false })
+  employeeName: string;
 
-  @Column({ type: 'varchar' })
-  lastname: string;
+  @Column({ type: 'varchar', nullable: false })
+  employeeLastname: string;
 
-  @Column({ type: 'varchar' })
-  address: string;
+  @Column({ type: 'varchar', nullable: false })
+  employeeAddress: string;
 
-  @Column({ type: 'varchar', unique: true })
-  phone: string;
+  @Column({ type: 'varchar', nullable: false, unique: true })
+  employeePhone: string;
 
-  @Column({ type: 'varchar', unique: true })
-  email: string;
+  @Column({ type: 'varchar', nullable: false, unique: true })
+  employeeEmail: string;
 
   @ManyToOne(() => Headquarter, (headquarter) => headquarter.employees, {
-    onDelete: 'SET NULL',
+    nullable: false,
   })
   headquarter: Headquarter;
 
-  @OneToMany(() => Sale, (sale) => sale.employee, {
-    onDelete: 'SET NULL',
-  })
+  @OneToMany(() => Sale, (sale) => sale.employee, { nullable: true })
   sales: Array<Sale>;
 
-  @OneToOne(() => User, (user) => user.employee, {
-    onDelete: 'SET NULL',
-  })
+  @OneToOne(() => User, (user) => user.employee, { nullable: true })
   user: User;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
-
-  @DeleteDateColumn({ type: 'timestamp' })
-  deletedAt: Date;
 }

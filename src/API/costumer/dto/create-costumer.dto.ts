@@ -1,29 +1,31 @@
 import { IsEmail, IsNotEmpty, IsPhoneNumber, IsString } from 'class-validator';
 
-export class CreateCostumerDto {
+export class CreateCustomerDto {
   @IsString()
   @IsNotEmpty()
-  identity: string;
+  customerIdentity: string;
 
   @IsString()
   @IsNotEmpty()
-  name: string;
+  customerName: string;
 
   @IsString()
   @IsNotEmpty()
-  lastname: string;
+  customerLastname: string;
 
   @IsString()
   @IsNotEmpty()
-  address: string;
+  customerAddress: string;
 
   @IsPhoneNumber('CO')
   @IsNotEmpty()
-  phone: string;
+  customerPhone: string;
 
   @IsEmail()
   @IsNotEmpty()
-  email: string;
+  customerEmail: string;
 
-  company?: string;
+  @IsString()
+  @IsNotEmpty()
+  company: string;
 }

@@ -1,24 +1,25 @@
+import { ICustomer } from '../costumer-interface/costumer.interface';
 import { IHeadquarter } from '../headquarter-interface/headquarter.interface';
 import { ISupplier } from '../supplier-interface/supplier.interface';
-import { ICostumer } from '../costumer-interface/costumer.interface';
 
 export interface ICompany {
   companyId: string;
-  nit: string;
-  name: string;
-  address: string;
-  phone: string;
-  email: string;
+  companyNit: string;
+  companyName: string;
+  companyAddress: string;
+  companyPhone: string;
+  companyEmail: string;
   headquarters: Array<IHeadquarter>;
   suppliers: Array<ISupplier>;
-  costumers: Array<ICostumer>;
+  customers: Array<ICustomer>;
 }
 
 export type ICreateCompany = Pick<
   ICompany,
-  'nit' | 'name' | 'address' | 'email' | 'phone'
-> & {
-  headquarters: Array<Pick<IHeadquarter, 'headquarterId'>>;
-  suppliers: Array<Pick<ISupplier, 'supplierId'>>;
-  costumers: Array<Pick<ICostumer, 'costumerId'>>;
-};
+  | 'companyNit'
+  | 'companyName'
+  | 'companyAddress'
+  | 'companyPhone'
+  | 'companyEmail'
+>
+  

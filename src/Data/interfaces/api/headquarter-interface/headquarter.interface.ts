@@ -3,13 +3,14 @@ import { IEmployee } from '../employee-interface/employee.interface';
 
 export interface IHeadquarter {
   headquarterId: string;
-  name: string;
-  address: string;
+  headquarterName: string;
+  headquarterAddress: string;
   company: ICompany;
   employees: Array<IEmployee>;
 }
 
-export type ICreateHeadquarter = Pick<IHeadquarter, 'name' | 'address'> & {
-  company: Pick<ICompany, 'companyId'>;
-  employees: Array<Pick<IEmployee, 'employeeId'>>;
-};
+export type ICreateHeadquarter = Pick<
+  IHeadquarter,
+  'headquarterName' | 'headquarterAddress'
+> &
+Partial<Pick<ICompany, 'companyId'>>;

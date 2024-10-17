@@ -1,5 +1,4 @@
 import { IsEmail, IsString, MinLength } from "class-validator";
-import { Rol } from "src/Data/entities/rol-entity/rol.entity";
 
 export class registerDto{
   @IsString()
@@ -13,6 +12,9 @@ export class registerDto{
   @MinLength(6)
   password: string;
 
+  employee: string;
+
+  rol: string;
 }
 
 

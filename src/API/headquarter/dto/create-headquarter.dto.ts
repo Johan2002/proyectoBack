@@ -4,12 +4,14 @@ export class CreateHeadquarterDto {
 
   @IsString()
   @IsNotEmpty()
-  name: string;
+  headquarterName: string;
   
   @IsString()
   @IsNotEmpty()
-  address: string;
+  headquarterAddress: string;
 
+  @IsString()
+  @IsNotEmpty()
   company: string;
 
 }

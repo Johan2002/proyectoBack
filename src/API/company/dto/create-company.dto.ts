@@ -3,27 +3,21 @@ import { IsEmail, IsNotEmpty, IsPhoneNumber, IsString } from 'class-validator';
 export class CreateCompanyDto {
   @IsString()
   @IsNotEmpty()
-  nit: string;
+  companyNit: string;
 
   @IsString()
   @IsNotEmpty()
-  name: string;
+  companyName: string;
 
   @IsString()
   @IsNotEmpty()
-  address: string;
+  companyAddress: string;
 
   @IsPhoneNumber('CO')
   @IsNotEmpty()
-  phone: string;
+  companyPhone: string;
 
   @IsEmail()
   @IsNotEmpty()
-  email: string;
-
-  headquarters?: string;
-
-  suppliers?: string;
-
-  costumers?: string;
+  companyEmail: string;
 }

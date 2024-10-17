@@ -1,16 +1,16 @@
 import {
   BadRequestException,
   Injectable,
-  Logger,
-  NotFoundException,
 } from '@nestjs/common';
-import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Employee } from 'src/Data/entities/employee-entity/employee.entity';
 import { Repository } from 'typeorm';
 import { Headquarter } from 'src/Data/entities/headquarter-entity/headquarter.entity';
-import { IEmployee } from 'src/Data/interfaces/api/employee-interface/employee.interface';
+import {
+  ICreateEmployee,
+  IEmployee,
+} from 'src/Data/interfaces/api/employee-interface/employee.interface';
 
 @Injectable()
 export class EmployeeService {
@@ -20,25 +20,21 @@ export class EmployeeService {
     @InjectRepository(Headquarter)
     private readonly headquarterReposiroty: Repository<Headquarter>,
   ) {}
-  async create(createEmployeeDto: CreateEmployeeDto): Promise<IEmployee> {
-    const { headquarter: headquarterId, ...employeeData } = createEmployeeDto;
-    let headquarter = null;
+  async create({
+    headquarterId,
+    ...createEmployee
+  }: ICreateEmployee): Promise<IEmployee> {
 
-    if (headquarterId) {
-      headquarter = await this.headquarterReposiroty.findOne({
-        where: { headquarterId },
-      });
-
-      if (!headquarter) {
-        throw new NotFoundException('The headquarters is not in the system.');
-      }
-    }
-
-    const newEmployee = this.employeeRespository.create({
-      headquarter,
-      ...employeeData,
+    const { employeeId }: IEmployee = await this.employeeRespository.save({
+      headquarter: { headquarterId },
+      ...createEmployee,
     });
-    return this.employeeRespository.save(newEmployee);
+
+    const employee = await this.employeeRespository.findOne({
+      where: { employeeId },
+    });
+
+    return employee;
   }
 
   async findAll(): Promise<Array<IEmployee>> {

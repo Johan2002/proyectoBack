@@ -5,7 +5,10 @@ import {
 } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { IProduct } from 'src/Data/interfaces/api/product-interface/product.interface';
+import {
+  ICreateProduct,
+  IProduct,
+} from 'src/Data/interfaces/api/product-interface/product.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from 'src/Data/entities/product-entity/product.entity';
 import { Repository } from 'typeorm';
@@ -19,19 +22,19 @@ export class ProductService {
     @InjectRepository(Supplier)
     private readonly supplierRepository: Repository<Supplier>,
   ) {}
-  async create(createProductDto: CreateProductDto): Promise<IProduct> {
-    const { supplier: supplierId, ...productData } = createProductDto;
-    const supplier = await this.supplierRepository.findOne({
-      where: { supplierId },
+  async create({
+    supplierId,
+    ...createProduct
+  }: ICreateProduct): Promise<IProduct> {
+    const { productId }: IProduct = await this.productRepository.save({
+      supplier: { supplierId },
+      ...createProduct,
     });
-    if (!supplier) {
-      throw new NotFoundException('The supplier is not in the system.');
-    }
-    const newProduct = this.productRepository.create({
-      supplier,
-      ...productData,
+    const product = await this.productRepository.findOne({
+      where: { productId },
     });
-    return this.productRepository.save(newProduct);
+
+    return product;
   }
 
   async findAll(): Promise<Array<IProduct>> {

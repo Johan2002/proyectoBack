@@ -1,17 +1,13 @@
-import {
-  BadRequestException,
-  ConflictException,
-  Injectable,
-  Logger,
-  NotFoundException,
-} from '@nestjs/common';
-import { CreateHeadquarterDto } from './dto/create-headquarter.dto';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UpdateHeadquarterDto } from './dto/update-headquarter.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Headquarter } from 'src/Data/entities/headquarter-entity/headquarter.entity';
 import { Repository } from 'typeorm';
 import { Company } from 'src/Data/entities/company-entity/company.entity';
-import { IHeadquarter } from 'src/Data/interfaces/api/headquarter-interface/headquarter.interface';
+import {
+  ICreateHeadquarter,
+  IHeadquarter,
+} from 'src/Data/interfaces/api/headquarter-interface/headquarter.interface';
 
 @Injectable()
 export class HeadquarterService {
@@ -21,22 +17,22 @@ export class HeadquarterService {
     @InjectRepository(Company)
     private readonly companyRepository: Repository<Company>,
   ) {}
-  async create(
-    createHeadquarterDto: CreateHeadquarterDto,
-  ): Promise<IHeadquarter> {
-    const { company: companyId, ...headquarterData } = createHeadquarterDto;
-    const company = await this.companyRepository.findOne({
-      where: { companyId },
-    });
-    if (!company) {
-      throw new NotFoundException('The company is not in the system.');
-    }
+  async create({
+    companyId,
+    ...createHeadquarter
+  }: ICreateHeadquarter): Promise<IHeadquarter> {
 
-    const newHeadquarter = this.headquarterRepository.create({
-      company,
-      ...headquarterData,
+    const { headquarterId }: IHeadquarter =
+      await this.headquarterRepository.save({
+        company: {companyId},
+        ...createHeadquarter,
+      });
+
+    const headquarter = await this.headquarterRepository.findOne({
+      where: { headquarterId },
     });
-    return this.headquarterRepository.save(newHeadquarter);
+
+    return headquarter;
   }
 
   async findAll(): Promise<Array<IHeadquarter>> {
@@ -48,7 +44,7 @@ export class HeadquarterService {
   async findOne(id: string): Promise<IHeadquarter> {
     const headquarter = await this.headquarterRepository.findOne({
       where: { headquarterId: id },
-      relations: ['company', 'sales'],
+      relations: ['employees', 'company'],
     });
     if (!headquarter) {
       throw new BadRequestException('Headquarter not found.');

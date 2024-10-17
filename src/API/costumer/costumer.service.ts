@@ -1,55 +1,52 @@
 import {
   BadRequestException,
-  ConflictException,
   Injectable,
-  Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateCostumerDto } from './dto/create-costumer.dto';
 import { UpdateCostumerDto } from './dto/update-costumer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Costumer } from 'src/Data/entities/costumer-entity/costumer.entity';
 import { Repository } from 'typeorm';
 import { Company } from 'src/Data/entities/company-entity/company.entity';
-import { ICostumer } from 'src/Data/interfaces/api/costumer-interface/costumer.interface';
+import {
+  ICreateCustomer,
+  ICustomer,
+} from 'src/Data/interfaces/api/costumer-interface/costumer.interface';
+import { CreateCustomerDto } from './dto/create-costumer.dto';
+import { Customer } from 'src/Data/entities/customer-entity/customer.entity';
 
 @Injectable()
 export class CostumerService {
   constructor(
-    @InjectRepository(Costumer)
-    private readonly costumerRepository: Repository<Costumer>,
+    @InjectRepository(Customer)
+    private readonly customerRepository: Repository<Customer>,
     @InjectRepository(Company)
     private readonly companyRepository: Repository<Company>,
   ) {}
-  async create(createCostumerDto: CreateCostumerDto): Promise<ICostumer> {
-    const { company: companyId, ...costumerData } = createCostumerDto;
-    let company = null;
-
-    if (companyId) {
-      company = await this.companyRepository.findOne({
-        where: { companyId },
-      });
-      if (!company) {
-        throw new NotFoundException('The company is not in the system.');
-      }
-    }
-
-    const newCostumer = this.costumerRepository.create({
-      company,
-      ...costumerData,
+  async create({
+    companyId,
+    ...createCustomer
+  }: ICreateCustomer): Promise<ICustomer> {
+    const { customerId }: ICustomer = await this.customerRepository.save({
+      company: { companyId },
+      ...createCustomer,
     });
-    return this.costumerRepository.save(newCostumer);
+
+    const customer = await this.customerRepository.findOne({
+      where: { customerId },
+    });
+
+    return customer;
   }
 
-  async findAll(): Promise<Array<ICostumer>> {
-    return await this.costumerRepository.find({
+  async findAll(): Promise<Array<ICustomer>> {
+    return await this.customerRepository.find({
       relations: ['company', 'sales'],
     });
   }
 
-  async findOne(id: string): Promise<ICostumer> {
-    const costumer = await this.costumerRepository.findOne({
-      where: { costumerId: id },
+  async findOne(id: string): Promise<ICustomer> {
+    const costumer = await this.customerRepository.findOne({
+      where: { customerId: id },
       relations: ['company', 'sales'],
     });
     if (!costumer) {
@@ -61,9 +58,9 @@ export class CostumerService {
   async update(
     id: string,
     updateCostumerDto: UpdateCostumerDto,
-  ): Promise<ICostumer> {
-    const costumer = await this.costumerRepository.findOne({
-      where: { costumerId: id },
+  ): Promise<ICustomer> {
+    const costumer = await this.customerRepository.findOne({
+      where: { customerId: id },
     });
     if (!costumer) {
       throw new BadRequestException('Customer not found.');
@@ -71,11 +68,11 @@ export class CostumerService {
 
     Object.assign(costumer, updateCostumerDto);
 
-    return this.costumerRepository.save(costumer);
+    return this.customerRepository.save(costumer);
   }
 
   async remove(id: string) {
     await this.findOne(id);
-    return await this.costumerRepository.delete(id);
+    return await this.customerRepository.delete(id);
   }
 }

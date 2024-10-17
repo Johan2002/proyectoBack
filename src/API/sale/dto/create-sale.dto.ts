@@ -7,7 +7,7 @@ export class CreateSaleDto {
 
   @IsString()
   @IsNotEmpty()
-  costumer: string;
+  customer: string;
 
   @IsArray()
   @IsNotEmpty()

@@ -17,10 +17,10 @@ import { AuthGuard } from './guard/auth.guard';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('register')
-  register(@Body() registerDto: registerDto) {
-    return this.authService.register(registerDto);
-  }
+  // @Post('register')
+  // register(@Body() registerDto: registerDto) {
+  //   return this.authService.register(registerDto);
+  // }
 
   @HttpCode(HttpStatus.OK)
   @Post('login')

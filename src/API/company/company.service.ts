@@ -1,14 +1,14 @@
 import {
   BadRequestException,
   Injectable,
-  Logger,
-  NotFoundException,
 } from '@nestjs/common';
-import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ICompany } from 'src/Data/interfaces/api/company-interface/company.interface';
+import {
+  ICompany,
+  ICreateCompany,
+} from 'src/Data/interfaces/api/company-interface/company.interface';
 import { Company } from 'src/Data/entities/company-entity/company.entity';
 
 @Injectable()
@@ -18,31 +18,28 @@ export class CompanyService {
     private readonly companyRepository: Repository<Company>,
   ) {}
 
-  async create(createCompanyDto: CreateCompanyDto): Promise<ICompany> {
-    const {
-      headquarters: headquarterId,
-      suppliers: supplierId,
-      costumers: costumerId,
-      ...companyData
-    } = createCompanyDto;
-
-    const newCompany = this.companyRepository.create({
-      ...companyData,
+  async create({ ...createCompany }: ICreateCompany): Promise<ICompany> {
+    const { companyId }: ICompany = await this.companyRepository.save({
+      ...createCompany,
     });
 
-    return this.companyRepository.save(newCompany);
+    const company = await this.companyRepository.findOne({
+      where: { companyId },
+    });
+
+    return company;
   }
 
   async findAll(): Promise<Array<ICompany>> {
     return await this.companyRepository.find({
-      relations: ['headquarters', 'suppliers', 'costumers'],
+      relations: ['headquarters', 'suppliers', 'customers'],
     });
   }
 
   async findOne(id: string): Promise<ICompany> {
     const company = await this.companyRepository.findOne({
       where: { companyId: id },
-      relations: ['headquarters', 'suppliers', 'costumers'],
+      relations: ['headquarters', 'suppliers', 'customers'],
     });
     if (!company) {
       throw new BadRequestException('Company not found');

@@ -8,36 +8,26 @@ import {
   Unique,
 } from 'typeorm';
 import { Employee } from '../employee-entity/employee.entity';
-import { Costumer } from '../costumer-entity/costumer.entity';
 import { Product } from '../product-entity/product.entity';
+import { Customer } from '../customer-entity/customer.entity';
 
 @Entity()
-@Unique(['employee', 'costumer', 'products'])
 export class Sale {
   @PrimaryGeneratedColumn('uuid')
   saleId: string;
 
-  @ManyToOne(() => Employee, (employee) => employee.sales, {
-    onDelete: 'SET NULL',
-  })
+  @ManyToOne(() => Employee, (employee) => employee.sales, { nullable: false })
   @JoinColumn()
   employee: Employee;
 
-  @ManyToOne(() => Costumer, (costumer) => costumer.sales, {
-    onDelete: 'SET NULL',
-  })
+  @ManyToOne(() => Customer, (customer) => customer.sales, { nullable: false })
   @JoinColumn()
-  costumer: Costumer;
+  customer: Customer;
 
-  @ManyToOne(() => Product, (product) => product.sales, {
-    onDelete: 'SET NULL'
-  })
+  @ManyToOne(() => Product, (product) => product.sales, { nullable: false })
   @JoinColumn()
   products: Array<Product>;
 
   @CreateDateColumn({ type: 'timestamp' })
   date_sale: Date;
-
-  @DeleteDateColumn({ type: 'timestamp' })
-  deletedAt: Date;
 }

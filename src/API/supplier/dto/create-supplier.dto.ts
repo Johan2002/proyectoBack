@@ -1,25 +1,27 @@
-import { IsEmail, IsNotEmpty, IsPhoneNumber, IsString } from "class-validator";
+import { IsArray, IsEmail, IsNotEmpty, IsPhoneNumber, IsString } from 'class-validator';
 
 export class CreateSupplierDto {
   @IsString()
   @IsNotEmpty()
-  nit: string;
-  
-  @IsString()
-  @IsNotEmpty()
-  name: string;
+  supplierNit: string;
 
   @IsString()
   @IsNotEmpty()
-  address: string;
+  supplierName: string;
+
+  @IsString()
+  @IsNotEmpty()
+  supplierAddress: string;
 
   @IsPhoneNumber('CO')
   @IsNotEmpty()
-  phone: string;
+  supplierPhone: string;
 
   @IsEmail()
   @IsNotEmpty()
-  email: string;
+  supplierEmail: string;
 
-  company?: string;
+  @IsString()
+  @IsNotEmpty()
+  company: string;
 }

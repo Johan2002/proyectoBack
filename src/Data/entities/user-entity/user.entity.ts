@@ -16,29 +16,24 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   userId: string;
 
-  @Column({ type: 'varchar', unique: true })
+  @Column({ type: 'varchar', nullable: false, unique: true })
   userName: string;
 
-  @Column({ type: 'varchar', unique: true })
-  email: string;
+  @Column({ type: 'varchar', nullable: false, unique: true })
+  userEmail: string;
 
-  @Column({ type: 'varchar' })
-  password: string;
+  @Column({ type: 'varchar', nullable: false })
+  userPassword: string;
 
-  @OneToOne(() => Employee, (employee) => employee.user, {
-    onDelete: 'SET NULL',
-  })
+  @OneToOne(() => Employee, (employee) => employee.user, { nullable: false })
   @JoinColumn()
   employee: Employee;
 
   @ManyToOne(() => Rol, (rol) => rol.user, {
-    onDelete: 'SET NULL',
+    nullable: false,
   })
   rol: Rol;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
-
-  @DeleteDateColumn({ type: 'timestamp' })
-  deletedAt: Date;
 }

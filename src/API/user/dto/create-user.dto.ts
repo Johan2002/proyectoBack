@@ -1,4 +1,7 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { Transform } from 'class-transformer';
+import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
+import { IEmployee } from 'src/Data/interfaces/api/employee-interface/employee.interface';
+import { IRol } from 'src/Data/interfaces/api/rol-interfaces/rol.interface';
 
 export class CreateUserDto {
   @IsString()
@@ -7,13 +10,15 @@ export class CreateUserDto {
 
   @IsString()
   @IsNotEmpty()
-  password: string;
+  userPassword: string;
 
   @IsString()
   @IsNotEmpty()
-  email: string;
+  userEmail: string;
 
-  employee?: string;
-
-  rol?: string;
+  @IsUUID()
+  employeeId: string;
+  
+  @IsUUID()
+  rolId: string;
 }

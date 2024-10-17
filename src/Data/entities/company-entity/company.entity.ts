@@ -3,55 +3,49 @@ import { Headquarter } from 'src/Data/entities/headquarter-entity/headquarter.en
 import {
   Column,
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   JoinColumn,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Costumer } from '../costumer-entity/costumer.entity';
+import { Customer } from '../customer-entity/customer.entity';
+
 
 @Entity()
 export class Company {
   @PrimaryGeneratedColumn('uuid')
   companyId: string;
 
-  @Column({ type: 'varchar', unique: true })
-  nit: string;
+  @Column({ type: 'varchar', nullable: false, unique: true })
+  companyNit: string;
 
-  @Column({ type: 'varchar', unique: true })
-  name: string;
+  @Column({ type: 'varchar', nullable: false, unique: true })
+  companyName: string;
 
-  @Column({ type: 'varchar' })
-  address: string;
+  @Column({ type: 'varchar', nullable: false, unique: true })
+  companyAddress: string;
 
-  @Column({ type: 'varchar', unique: true })
-  phone: string;
+  @Column({ type: 'varchar', nullable: false, unique: true })
+  companyPhone: string;
 
-  @Column({ type: 'varchar', unique: true })
-  email: string;
+  @Column({ type: 'varchar', nullable: false, unique: true })
+  companyEmail: string;
 
   @OneToMany(() => Headquarter, (headquarters) => headquarters.company, {
-    onDelete: 'SET NULL',
+    nullable: false,
   })
-  @JoinColumn()
   headquarters: Array<Headquarter>;
 
   @OneToMany(() => Supplier, (supplier) => supplier.company, {
-    onDelete: 'SET NULL',
+    nullable: false,
   })
   @JoinColumn()
   suppliers: Array<Supplier>;
 
-  @OneToMany(() => Costumer, (costumer) => costumer.company, {
-    onDelete: 'SET NULL',
-  })
+  @OneToMany(() => Customer, (customer) => customer.company, { nullable: true })
   @JoinColumn()
-  costumers: Array<Costumer>;
+  customers: Array<Customer>;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
-
-  @DeleteDateColumn({ type: 'timestamp' })
-  deletedAt: Date;
 }

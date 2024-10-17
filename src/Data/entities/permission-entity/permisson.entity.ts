@@ -11,11 +11,9 @@ export class Permission {
   @PrimaryGeneratedColumn('uuid')
   permissionId: string;
 
-  @Column({ type: 'varchar' })
-  name: string;
+  @Column({ type: 'varchar', nullable: false, unique: true })
+  permissionName: string;
 
-  @ManyToMany(() => Rol, (rol) => rol.permission, {
-    onDelete: 'SET NULL',
-  })
+  @ManyToMany(() => Rol, (rol) => rol.permission, { nullable: false })
   rol: Array<Rol>;
 }

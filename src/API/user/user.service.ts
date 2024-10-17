@@ -4,14 +4,16 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/Data/entities/user-entity/user.entity';
 import { Repository } from 'typeorm';
 import { Employee } from 'src/Data/entities/employee-entity/employee.entity';
 import * as bcrypt from 'bcrypt';
-import { IUser } from 'src/Data/interfaces/api/user-interface/user.interface';
+import {
+  ICreateUser,
+  IUser,
+} from 'src/Data/interfaces/api/user-interface/user.interface';
 
 @Injectable()
 export class UserService {
@@ -27,38 +29,28 @@ export class UserService {
   ) {}
 
   // Método para crear un nuevo usuario
-  async create(createUserDto: CreateUserDto): Promise<IUser> {
-    const {
-      rol: rolId,
-      employee: employeeId,
-      password,
-      ...userData
-    } = createUserDto;
+  async create({
+    rolId,
+    employeeId,
+    ...createUser
+  }: ICreateUser): Promise<IUser> {
+    createUser.userPassword = await bcrypt.hash(createUser.userPassword, 10);
 
-    const rol = await this.rolRepository.findOne({ where: { rolId } });
-    if (!rol) {
-      throw new NotFoundException('Rol not found');
-    }
-    const employee = await this.employeeRepository.findOne({
-      where: { employeeId },
-    });
-    if (!employee) {
-      throw new NotFoundException('Employee not found');
-    }
-
-    const hashpassword = await bcrypt.hash(password, 10);
-    const newUser = this.userRepository.create({
-      ...userData,
-      password: hashpassword,
-      employee: employee,
-      rol: rol,
+    const { userId }: IUser = await this.userRepository.save({
+      rol: { rolId },
+      employee: { employeeId },
+      ...createUser,
     });
 
-    return this.userRepository.save(newUser);
+    const user = await this.userRepository.findOne({ where: { userId } });
+
+    delete user.userPassword;
+
+    return user;
   }
 
-  findOneByEmail(email: string) {
-    return this.userRepository.findOneBy({ email });
+  findOneByEmail(userEmail: string) {
+    return this.userRepository.findOneBy({ userEmail });
   }
 
   //Método para listar todos los usuarios

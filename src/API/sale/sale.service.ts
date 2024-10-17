@@ -8,10 +8,10 @@ import { CreateSaleDto } from './dto/create-sale.dto';
 import { UpdateSaleDto } from './dto/update-sale.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Sale } from 'src/Data/entities/sale-entity/sale.entity';
-import { In, Repository } from 'typeorm';
-import { Costumer } from 'src/Data/entities/costumer-entity/costumer.entity';
+import { Repository } from 'typeorm';
 import { Product } from 'src/Data/entities/product-entity/product.entity';
 import { ISale } from 'src/Data/interfaces/api/sale-interface/sale.interface';
+import { Customer } from 'src/Data/entities/customer-entity/customer.entity';
 
 @Injectable()
 export class SaleService {
@@ -20,16 +20,16 @@ export class SaleService {
     private readonly saleRepository: Repository<Sale>,
     @InjectRepository(Employee)
     private readonly employeeRepository: Repository<Employee>,
-    @InjectRepository(Costumer)
-    private readonly costumerRepository: Repository<Costumer>,
+    @InjectRepository(Customer)
+    private readonly costumerRepository: Repository<Customer>,
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
   ) {}
   async create(createSaleDto: CreateSaleDto): Promise<ISale> {
-    const { employee: employeeId, costumer: costumerId, products: productId } = createSaleDto;
+    const { employee: employeeId, customer: customerId, products: productId } = createSaleDto;
   
     const employee = await this.employeeRepository.findOne({ where: { employeeId } });
-    const costumer = await this.costumerRepository.findOne({ where: { costumerId } });
+    const costumer = await this.costumerRepository.findOne({ where: { customerId } });
     const products = await this.productRepository.findByIds(productId);
   
     if (!employee || !costumer) {
@@ -38,7 +38,7 @@ export class SaleService {
   
     const newSale = this.saleRepository.create({
       employee: employee,
-      costumer: costumer,
+      customer: costumer,
       products: products,
     });
   
@@ -47,14 +47,14 @@ export class SaleService {
 
   async findAll(): Promise<Array<ISale>> {
     return await this.saleRepository.find({
-      relations: ['employee', 'costumer', 'products'],
+      relations: ['employee', 'customer', 'products'],
     });
   }
 
   async findOne(id: string): Promise<ISale> {
     const sale = await this.saleRepository.findOne({
       where: { saleId: id },
-      relations: ['employee', 'costumer', 'products'],
+      relations: ['employee', 'customer', 'products'],
     });
     if (!sale) {
       throw new BadRequestException('Sale not found.');

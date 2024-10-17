@@ -9,7 +9,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Supplier } from 'src/Data/entities/supplier-entity/supplier.entity';
 import { Repository } from 'typeorm';
 import { Company } from 'src/Data/entities/company-entity/company.entity';
-import { ISupplier } from 'src/Data/interfaces/api/supplier-interface/supplier.interface';
+import {
+  ICreateSupplier,
+  ISupplier,
+} from 'src/Data/interfaces/api/supplier-interface/supplier.interface';
 
 @Injectable()
 export class SupplierService {
@@ -19,25 +22,20 @@ export class SupplierService {
     @InjectRepository(Company)
     private readonly companyRepository: Repository<Company>,
   ) {}
-  async create(createSupplierDto: CreateSupplierDto): Promise<ISupplier> {
-    const { company: companyId, ...supplierData } = createSupplierDto;
-
-    let company = null;
-
-    if (companyId) {
-      company = await this.companyRepository.findOne({
-        where: { companyId },
-      });
-      if (!company) {
-        throw new NotFoundException('The company is not in the system.');
-      }
-    }
-
-    const newSupplier = this.supplierRepository.create({
-      company,
-      ...supplierData,
+  async create({
+    companyId,
+    ...createSupplier
+  }: ICreateSupplier): Promise<ISupplier> {
+    const { supplierId }: ISupplier = await this.supplierRepository.save({
+      company: [{ companyId }],
+      ...createSupplier,
     });
-    return this.supplierRepository.save(newSupplier);
+
+    const supplier = await this.supplierRepository.findOne({
+      where: { supplierId },
+    });
+
+    return supplier;
   }
 
   async findAll(): Promise<Array<ISupplier>> {

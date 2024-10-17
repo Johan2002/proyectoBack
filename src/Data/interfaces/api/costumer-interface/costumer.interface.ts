@@ -1,21 +1,24 @@
-import { ICompany } from "../company-interface/company.interface";
-import { ISale } from "../sale-interface/sale.interface";
+import { ICompany } from '../company-interface/company.interface';
+import { ISale } from '../sale-interface/sale.interface';
 
-export interface ICostumer {
-
-  costumerId: string;
-  identity: string;
-  name: string;
-  lastname: string;
-  address: string;
-  phone: string;
-  email: string;
+export interface ICustomer {
+  customerId: string;
+  customerIdentity: string;
+  customerName: string;
+  customerLastname: string;
+  customerAddress: string;
+  customerPhone: string;
+  customerEmail: string;
   company: ICompany;
   sales: Array<ISale>;
-  
 }
 
-export type ICreateCostumer = Pick<ICostumer, 'identity' | 'name' | 'lastname'|'phone'|'email'>&{
-  company: Pick<ICompany, 'companyId'>;
-  sales: Array<Pick<ISale, 'saleId'>>;
-}
+export type ICreateCustomer = Pick<
+  ICustomer,
+  | 'customerIdentity'
+  | 'customerName'
+  | 'customerLastname'
+  | 'customerPhone'
+  | 'customerEmail'
+> &
+  Partial<Pick<ICompany, 'companyId'>>;

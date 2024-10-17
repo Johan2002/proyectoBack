@@ -1,7 +1,6 @@
 import {
   Column,
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
@@ -12,39 +11,34 @@ import { Supplier } from '../supplier-entity/supplier.entity';
 import { Sale } from '../sale-entity/sale.entity';
 
 @Entity()
-@Unique(['code', 'name', 'supplier'])
+@Unique(['productCode', 'productName', 'supplier'])
 export class Product {
   @PrimaryGeneratedColumn('uuid')
   productId: string;
 
+  @Column({ type: 'varchar', nullable: false, unique: true })
+  productCode: string;
+
+  @Column({ type: 'varchar', nullable: false, unique: true })
+  productName: string;
+
+  @Column({ type: 'numeric', nullable: false })
+  productPrice: number;
+
+  @Column({ type: 'int4', nullable: false })
+  productAmount: number;
+
   @Column({ type: 'varchar', nullable: true })
-  code: string;
-
-  @Column({ type: 'varchar' })
-  name: string;
-
-  @Column({ type: 'numeric' })
-  price: number;
-
-  @Column({ type: 'int4' })
-  amount: number;
-
-  @Column({ type: 'varchar' })
-  description: string;
+  productDescription: string;
 
   @ManyToOne(() => Supplier, (supplier) => supplier.products, {
-    onDelete: 'SET NULL',
+    nullable: false,
   })
   supplier: Supplier;
 
-  @OneToMany(() => Sale, (sale) => sale.products, {
-    onDelete: 'SET NULL',
-  })
+  @OneToMany(() => Sale, (sale) => sale.products, { nullable: true })
   sales: Array<Sale>;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
-
-  @DeleteDateColumn({ type: 'timestamp' })
-  deletedAt: Date;
 }

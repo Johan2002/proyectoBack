@@ -1,16 +1,16 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
 import { CostumerService } from './costumer.service';
-import { CreateCostumerDto } from './dto/create-costumer.dto';
+import { CreateCustomerDto } from './dto/create-costumer.dto';
 import { UpdateCostumerDto } from './dto/update-costumer.dto';
 
-@Controller('costumer')
+@Controller('customer')
 export class CostumerController {
   constructor(private readonly costumerService: CostumerService) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() createClienteDto: CreateCostumerDto) {
-    return this.costumerService.create(createClienteDto);
+  create(@Body() createCustomerDto: CreateCustomerDto) {
+    return this.costumerService.create(createCustomerDto);
   }
 
   @Get()
