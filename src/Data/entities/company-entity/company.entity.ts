@@ -10,7 +10,6 @@ import {
 } from 'typeorm';
 import { Customer } from '../customer-entity/customer.entity';
 
-
 @Entity()
 export class Company {
   @PrimaryGeneratedColumn('uuid')

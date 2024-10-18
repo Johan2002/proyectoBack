@@ -1,14 +1,8 @@
-import { Rol } from '../../Data/entities/rol-entity/rol.entity';
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/Data/entities/user-entity/user.entity';
 import { Repository } from 'typeorm';
-import { Employee } from 'src/Data/entities/employee-entity/employee.entity';
 import * as bcrypt from 'bcrypt';
 import {
   ICreateUser,
@@ -20,12 +14,6 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-
-    @InjectRepository(Employee)
-    private readonly employeeRepository: Repository<Employee>,
-
-    @InjectRepository(Rol)
-    private readonly rolRepository: Repository<Rol>,
   ) {}
 
   // Método para crear un nuevo usuario
@@ -55,15 +43,20 @@ export class UserService {
 
   //Método para listar todos los usuarios
   async findAll(): Promise<Array<IUser>> {
-    return await this.userRepository.find();
+    const user = await this.userRepository.find({
+      select: ['userId', 'userName', 'userEmail'],
+      relations: ['rol', 'employee'],
+    });
+    return user;
   }
 
   //Método para listar usuario por uuid
   async findOne(id: string): Promise<IUser> {
-    const user = await this.userRepository.findOne({ where: { userId: id } });
-    if (!user) {
-      throw new BadRequestException('User not found');
-    }
+    const user = await this.userRepository.findOne({
+      where: { userId: id },
+      relations: ['rol', 'employee'],
+    });
+    delete user.userPassword;
     return user;
   }
 
@@ -74,7 +67,13 @@ export class UserService {
       throw new NotFoundException('User not found');
     }
 
+    if ('userPassword' in updateUserDto) {
+      delete updateUserDto.userPassword;
+    }
+
     Object.assign(user, updateUserDto);
+
+    delete user.userPassword;
 
     return this.userRepository.save(user);
   }

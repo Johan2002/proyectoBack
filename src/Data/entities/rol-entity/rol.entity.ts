@@ -5,13 +5,11 @@ import {
   ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
-  Unique,
 } from 'typeorm';
 import { User } from '../user-entity/user.entity';
 import { Permission } from '../permission-entity/permisson.entity';
 
 @Entity()
-@Unique(['rolName'])
 export class Rol {
   @PrimaryGeneratedColumn('uuid')
   rolId: string;
@@ -28,7 +26,9 @@ export class Rol {
   @OneToMany(() => User, (user) => user.rol, { nullable: true })
   user: Array<User>;
 
-  @ManyToMany(() => Permission, (permission) => permission.rol, { nullable: false })
-  @JoinTable({name: 'permission_rol'})
+  @ManyToMany(() => Permission, (permission) => permission.rol, {
+    nullable: false,
+  })
+  @JoinTable({ name: 'permission_rol' })
   permission: Array<Permission>;
 }

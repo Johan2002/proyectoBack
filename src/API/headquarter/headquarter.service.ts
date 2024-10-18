@@ -14,17 +14,14 @@ export class HeadquarterService {
   constructor(
     @InjectRepository(Headquarter)
     private readonly headquarterRepository: Repository<Headquarter>,
-    @InjectRepository(Company)
-    private readonly companyRepository: Repository<Company>,
   ) {}
   async create({
     companyId,
     ...createHeadquarter
   }: ICreateHeadquarter): Promise<IHeadquarter> {
-
     const { headquarterId }: IHeadquarter =
       await this.headquarterRepository.save({
-        company: {companyId},
+        company: { companyId },
         ...createHeadquarter,
       });
 

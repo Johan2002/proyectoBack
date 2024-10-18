@@ -1,17 +1,11 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UpdateCostumerDto } from './dto/update-costumer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Company } from 'src/Data/entities/company-entity/company.entity';
 import {
   ICreateCustomer,
   ICustomer,
 } from 'src/Data/interfaces/api/costumer-interface/costumer.interface';
-import { CreateCustomerDto } from './dto/create-costumer.dto';
 import { Customer } from 'src/Data/entities/customer-entity/customer.entity';
 
 @Injectable()
@@ -19,8 +13,6 @@ export class CostumerService {
   constructor(
     @InjectRepository(Customer)
     private readonly customerRepository: Repository<Customer>,
-    @InjectRepository(Company)
-    private readonly companyRepository: Repository<Company>,
   ) {}
   async create({
     companyId,

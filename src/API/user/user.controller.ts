@@ -1,4 +1,3 @@
-import { IUser } from '../../Data/interfaces/api/user-interface/user.interface';
 import {
   Controller,
   Get,
@@ -13,13 +12,14 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from 'src/Data/entities/user-entity/user.entity';
+import { Public } from 'src/Data/decorators/public.decorator';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
+  @Public()
   @HttpCode(HttpStatus.CREATED)
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);

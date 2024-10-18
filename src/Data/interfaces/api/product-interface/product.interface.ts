@@ -20,4 +20,4 @@ export type ICreateProduct = Pick<
   | 'productAmount'
   | 'productDescription'
 > &
-  Partial<Pick<ISupplier, 'supplierId'>>
+  Partial<Pick<ISupplier, 'supplierId'>>;

@@ -1,12 +1,8 @@
-import {
-  BadRequestException,
-  Injectable,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Employee } from 'src/Data/entities/employee-entity/employee.entity';
 import { Repository } from 'typeorm';
-import { Headquarter } from 'src/Data/entities/headquarter-entity/headquarter.entity';
 import {
   ICreateEmployee,
   IEmployee,
@@ -17,14 +13,11 @@ export class EmployeeService {
   constructor(
     @InjectRepository(Employee)
     private readonly employeeRespository: Repository<Employee>,
-    @InjectRepository(Headquarter)
-    private readonly headquarterReposiroty: Repository<Headquarter>,
   ) {}
   async create({
     headquarterId,
     ...createEmployee
   }: ICreateEmployee): Promise<IEmployee> {
-
     const { employeeId }: IEmployee = await this.employeeRespository.save({
       headquarter: { headquarterId },
       ...createEmployee,

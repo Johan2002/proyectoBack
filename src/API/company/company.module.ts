@@ -8,7 +8,9 @@ import { Company } from 'src/Data/entities/company-entity/company.entity';
 import { Customer } from 'src/Data/entities/customer-entity/customer.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Company, Headquarter, Supplier, Customer])],
+  imports: [
+    TypeOrmModule.forFeature([Company, Headquarter, Supplier, Customer]),
+  ],
   controllers: [CompanyController],
   providers: [CompanyService],
 })

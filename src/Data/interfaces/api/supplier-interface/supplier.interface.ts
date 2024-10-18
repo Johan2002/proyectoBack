@@ -20,4 +20,4 @@ export type ICreateSupplier = Pick<
   | 'supplierPhone'
   | 'supplierEmail'
 > &
-  Partial<Pick<ICompany, 'companyId'>>
+  Partial<Pick<ICompany, 'companyId'>>;

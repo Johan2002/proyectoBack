@@ -9,6 +9,7 @@ import { ProductModule } from './product/product.module';
 import { SaleModule } from './sale/sale.module';
 import { PermissionModule } from './permission/permission.module';
 import { RolModule } from './rol/rol.module';
+import { ProductSaleModule } from './product-sale/product-sale.module';
 import { AuthModule } from './auth/auth.module';
 
 @Module({
@@ -24,6 +25,7 @@ import { AuthModule } from './auth/auth.module';
     PermissionModule,
     RolModule,
     AuthModule,
+    ProductSaleModule,
   ],
 })
 export class ApiModule {}

@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { CreateProductDto } from './dto/create-product.dto';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UpdateProductDto } from './dto/update-product.dto';
 import {
   ICreateProduct,
@@ -12,15 +7,12 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from 'src/Data/entities/product-entity/product.entity';
 import { Repository } from 'typeorm';
-import { Supplier } from 'src/Data/entities/supplier-entity/supplier.entity';
 
 @Injectable()
 export class ProductService {
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
-    @InjectRepository(Supplier)
-    private readonly supplierRepository: Repository<Supplier>,
   ) {}
   async create({
     supplierId,

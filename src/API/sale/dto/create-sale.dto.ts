@@ -1,4 +1,8 @@
-import { IsArray, IsInt, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import {
+  IsArray,
+  IsNotEmpty,
+  IsString,
+} from 'class-validator';
 
 export class CreateSaleDto {
   @IsString()

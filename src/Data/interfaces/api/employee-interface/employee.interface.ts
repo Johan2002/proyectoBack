@@ -24,4 +24,4 @@ export type ICreateEmployee = Pick<
   | 'employeeAddress'
   | 'employeePhone'
 > &
-  Partial<Pick<IHeadquarter, 'headquarterId'>>
+  Partial<Pick<IHeadquarter, 'headquarterId'>>;

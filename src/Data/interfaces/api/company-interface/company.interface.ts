@@ -21,5 +21,4 @@ export type ICreateCompany = Pick<
   | 'companyAddress'
   | 'companyPhone'
   | 'companyEmail'
->
-  
+>;

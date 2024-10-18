@@ -14,5 +14,5 @@ export type ICreateUser = Pick<
   IUser,
   'userName' | 'userEmail' | 'userPassword'
 > &
-  Pick<IEmployee, 'employeeId'> &
-  Pick<IRol, 'rolId'>;
+  Partial<Pick<IEmployee, 'employeeId'>> &
+  Partial<Pick<IRol, 'rolId'>>;

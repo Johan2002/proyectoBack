@@ -4,7 +4,6 @@ import { Headquarter } from 'src/Data/entities/headquarter-entity/headquarter.en
 import {
   Column,
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,

@@ -12,7 +12,14 @@ import {
 import { Product } from '../product-entity/product.entity';
 
 @Entity()
-@Unique(['supplierNit', 'supplierName', 'supplierAddress', 'supplierPhone', 'supplierEmail', 'company'])
+@Unique([
+  'supplierNit',
+  'supplierName',
+  'supplierAddress',
+  'supplierPhone',
+  'supplierEmail',
+  'company',
+])
 export class Supplier {
   @PrimaryGeneratedColumn('uuid')
   supplierId: string;

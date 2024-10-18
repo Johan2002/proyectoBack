@@ -1,11 +1,9 @@
 import {
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-  Unique,
 } from 'typeorm';
 import { Employee } from '../employee-entity/employee.entity';
 import { Product } from '../product-entity/product.entity';

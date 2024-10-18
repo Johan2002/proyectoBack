@@ -1,12 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import { TransformAndExceptionInterceptor } from './Data/interceptor/error-interceptor';
-// import { LoggingInterceptor } from './interceptor/typeorm-logging.interceptor';
+// import { AllExceptionsFilter } from './Data/filters/filter-exceptions.filter';
+// import { ErrorListInterceptor } from './Data/interceptor/error-interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalInterceptors(new TransformAndExceptionInterceptor());
+  // app.useGlobalInterceptors(new ErrorListInterceptor());
+  // app.useGlobalFilters(new AllExceptionsFilter());
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

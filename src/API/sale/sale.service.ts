@@ -26,22 +26,30 @@ export class SaleService {
     private readonly productRepository: Repository<Product>,
   ) {}
   async create(createSaleDto: CreateSaleDto): Promise<ISale> {
-    const { employee: employeeId, customer: customerId, products: productId } = createSaleDto;
-  
-    const employee = await this.employeeRepository.findOne({ where: { employeeId } });
-    const costumer = await this.costumerRepository.findOne({ where: { customerId } });
+    const {
+      employee: employeeId,
+      customer: customerId,
+      products: productId,
+    } = createSaleDto;
+
+    const employee = await this.employeeRepository.findOne({
+      where: { employeeId },
+    });
+    const costumer = await this.costumerRepository.findOne({
+      where: { customerId },
+    });
     const products = await this.productRepository.findByIds(productId);
-  
+
     if (!employee || !costumer) {
       throw new NotFoundException('Employee, customer or products not found');
     }
-  
+
     const newSale = this.saleRepository.create({
       employee: employee,
       customer: costumer,
       products: products,
     });
-  
+
     return this.saleRepository.save(newSale);
   }
 

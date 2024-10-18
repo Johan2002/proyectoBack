@@ -13,4 +13,4 @@ export type ICreateHeadquarter = Pick<
   IHeadquarter,
   'headquarterName' | 'headquarterAddress'
 > &
-Partial<Pick<ICompany, 'companyId'>>;
+  Partial<Pick<ICompany, 'companyId'>>;

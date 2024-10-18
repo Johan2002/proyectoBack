@@ -1,7 +1,6 @@
 import {
   Column,
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
@@ -12,7 +11,14 @@ import { Company } from '../company-entity/company.entity';
 import { Sale } from '../sale-entity/sale.entity';
 
 @Entity()
-@Unique(['customerIdentity', 'customerName', 'customerLastname', 'customerEmail', 'customerPhone', 'company'])
+@Unique([
+  'customerIdentity',
+  'customerName',
+  'customerLastname',
+  'customerEmail',
+  'customerPhone',
+  'company',
+])
 export class Customer {
   @PrimaryGeneratedColumn('uuid')
   customerId: string;
