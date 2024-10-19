@@ -1,76 +1,75 @@
-// import {
-//   Injectable,
-//   NestInterceptor,
-//   ExecutionContext,
-//   CallHandler,
-//   HttpException,
-//   HttpStatus,
-// } from '@nestjs/common';
-// import { error } from 'console';
-// import { Observable, throwError } from 'rxjs';
-// import { catchError, map, tap } from 'rxjs/operators';
-// import { QueryFailedError } from 'typeorm';
-// import { ERROR_LIST } from './errorlist-interceptor';
-// import { ICatchRespose } from '../interfaces/data/error-respnse';
+import {
+  Injectable,
+  NestInterceptor,
+  ExecutionContext,
+  CallHandler,
+  HttpException,
+} from '@nestjs/common';
+import { error } from 'console';
+import { Observable, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+import { QueryFailedError } from 'typeorm';
+import { ERROR_LIST } from './errorlist-interceptor';
+import { ICatchRespose } from '../interfaces/data/error-respnse';
 
-// @Injectable()
-// export class TransformAndExceptionInterceptor implements NestInterceptor {
-//   private static getDetailError(error: any): ICatchRespose {
-//     let errorKey = error.constructor.name;
+@Injectable()
+export class TransformAndExceptionInterceptor implements NestInterceptor {
+  private static getDetailError(error: any): ICatchRespose {
+    let errorKey = error.constructor.name;
 
-//     if (
-//       error instanceof QueryFailedError &&
-//       error.driverError &&
-//       error.driverError.code
-//     ) {
-//       errorKey = `${error.constructor.name}:${error.driverError.code}`;
-//     }
+    if (
+      error instanceof QueryFailedError &&
+      error.driverError &&
+      error.driverError.code
+    ) {
+      errorKey = `${error.constructor.name}:${error.driverError.code}`;
+    }
 
-//     const errorDetail =
-//       ERROR_LIST[errorKey] || ERROR_LIST['InternalServerErrorException'];
+    const errorDetail =
+      ERROR_LIST[errorKey] || ERROR_LIST['InternalServerErrorException'];
 
-//     if (typeof errorDetail === 'function') {
-//       return errorDetail(error);
-//     }
+    if (typeof errorDetail === 'function') {
+      return errorDetail(error);
+    }
 
-//     return errorDetail;
-//   }
+    return errorDetail;
+  }
 
-//   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-//     const now = Date.now();
+  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+    const now = Date.now();
 
-//     const request = context.switchToHttp().getRequest();
-//     const { method, url } = request;
+    const request = context.switchToHttp().getRequest();
+    const { method, url } = request;
 
-//     console.log(`Manejo de la solicitud ${method} ${url}...`);
+    console.log(`Manejo de la solicitud ${method} ${url}...`);
 
-//     return next.handle().pipe(
-//       catchError((err) => {
-//         console.error(`Error en la ruta ${url}:`, err.message);
-//         const errorDetail =
-//           TransformAndExceptionInterceptor.getDetailError(error);
+    return next.handle().pipe(
+      catchError((err) => {
+        console.error(`Error en la ruta ${url}:`, err.message);
+        const errorDetail =
+          TransformAndExceptionInterceptor.getDetailError(error);
 
-//         const customError = new HttpException(
-//           {
-//             status: errorDetail.status,
-//             message: errorDetail.message,
-//             additionalInfo: {
-//               ...errorDetail.additionalInfo,
-//             },
-//           },
-//           errorDetail.status,
-//         );
-//         return throwError(() => customError);
-//       }),
-//       tap(() => {
-//         const elapsedTime = Date.now() - now;
-//         console.log(
-//           `La solicitud ${url} se ha ejecutado con éxito en ${elapsedTime}ms`,
-//         );
-//       }),
-//     );
-//   }
-// }
+        const customError = new HttpException(
+          {
+            status: errorDetail.status,
+            message: errorDetail.message,
+            additionalInfo: {
+              ...errorDetail.additionalInfo,
+            },
+          },
+          errorDetail.status,
+        );
+        return throwError(() => customError);
+      }),
+      tap(() => {
+        const elapsedTime = Date.now() - now;
+        console.log(
+          `La solicitud ${url} se ha ejecutado con éxito en ${elapsedTime}ms`,
+        );
+      }),
+    );
+  }
+}
 
 // import {
 //   CallHandler,
