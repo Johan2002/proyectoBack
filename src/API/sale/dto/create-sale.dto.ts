@@ -1,10 +1,16 @@
 import {
-  IsArray,
   IsNotEmpty,
+  IsNumber,
   IsString,
 } from 'class-validator';
 
 export class CreateSaleDto {
+  @IsNumber()
+  saleTotalPrice: number;
+
+  @IsString()
+  salePaymentMethod: string;
+
   @IsString()
   @IsNotEmpty()
   employee: string;
@@ -12,8 +18,4 @@ export class CreateSaleDto {
   @IsString()
   @IsNotEmpty()
   customer: string;
-
-  @IsArray()
-  @IsNotEmpty()
-  products: Array<string>;
 }

@@ -1,3 +1,4 @@
+import { ISaleDetail } from '../sale-detail-interface/sale-detail.interface';
 import { ISale } from '../sale-interface/sale.interface';
 import { ISupplier } from '../supplier-interface/supplier.interface';
 
@@ -9,7 +10,7 @@ export interface IProduct {
   productAmount: number;
   productDescription: string;
   supplier: ISupplier;
-  sales: Array<ISale>;
+  salesDetails: Array<ISaleDetail>;
 }
 
 export type ICreateProduct = Pick<

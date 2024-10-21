@@ -7,6 +7,7 @@ import {
   ICreateEmployee,
   IEmployee,
 } from 'src/Data/interfaces/api/employee-interface/employee.interface';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class EmployeeService {
@@ -32,7 +33,7 @@ export class EmployeeService {
 
   async findAll(): Promise<Array<IEmployee>> {
     return await this.employeeRespository.find({
-      relations: ['headquarter', 'sales', 'user'],
+      relations: ['user', 'sales'],
     });
   }
 

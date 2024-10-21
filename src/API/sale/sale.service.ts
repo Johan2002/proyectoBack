@@ -9,8 +9,10 @@ import { UpdateSaleDto } from './dto/update-sale.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Sale } from 'src/Data/entities/sale-entity/sale.entity';
 import { Repository } from 'typeorm';
-import { Product } from 'src/Data/entities/product-entity/product.entity';
-import { ISale } from 'src/Data/interfaces/api/sale-interface/sale.interface';
+import {
+  ICreateSale,
+  ISale,
+} from 'src/Data/interfaces/api/sale-interface/sale.interface';
 import { Customer } from 'src/Data/entities/customer-entity/customer.entity';
 
 @Injectable()
@@ -22,35 +24,21 @@ export class SaleService {
     private readonly employeeRepository: Repository<Employee>,
     @InjectRepository(Customer)
     private readonly costumerRepository: Repository<Customer>,
-    @InjectRepository(Product)
-    private readonly productRepository: Repository<Product>,
   ) {}
-  async create(createSaleDto: CreateSaleDto): Promise<ISale> {
-    const {
-      employee: employeeId,
-      customer: customerId,
-      products: productId,
-    } = createSaleDto;
-
-    const employee = await this.employeeRepository.findOne({
-      where: { employeeId },
-    });
-    const costumer = await this.costumerRepository.findOne({
-      where: { customerId },
-    });
-    const products = await this.productRepository.findByIds(productId);
-
-    if (!employee || !costumer) {
-      throw new NotFoundException('Employee, customer or products not found');
-    }
-
-    const newSale = this.saleRepository.create({
-      employee: employee,
-      customer: costumer,
-      products: products,
+  async create({
+    employeeId,
+    customerId,
+    ...createSale
+  }: ICreateSale): Promise<ISale> {
+    const { saleId }: ISale = await this.saleRepository.save({
+      employee: { employeeId },
+      customer: { customerId },
+      ...createSale,
     });
 
-    return this.saleRepository.save(newSale);
+    const sale = await this.saleRepository.findOne({ where: { saleId } });
+
+    return sale;
   }
 
   async findAll(): Promise<Array<ISale>> {

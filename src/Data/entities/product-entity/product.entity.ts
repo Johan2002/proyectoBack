@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { Supplier } from '../supplier-entity/supplier.entity';
 import { Sale } from '../sale-entity/sale.entity';
+import { SaleDetail } from '../sale-details-entity/sale-details.entity';
 
 @Entity()
 @Unique(['productCode', 'productName', 'supplier'])
@@ -36,8 +37,8 @@ export class Product {
   })
   supplier: Supplier;
 
-  @OneToMany(() => Sale, (sale) => sale.products, { nullable: true })
-  sales: Array<Sale>;
+  @OneToMany(() => SaleDetail, (saleDetail) => saleDetail.product, { nullable: true })
+  salesDetails: Array<SaleDetail>;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;

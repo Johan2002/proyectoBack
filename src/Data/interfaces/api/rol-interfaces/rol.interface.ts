@@ -10,5 +10,4 @@ export interface IRol {
   permission: Array<IPermission>;
 }
 
-export type ICreateRol = Omit<IRol, 'roleId' | 'user' | 'permission'> &
-  Record<'permissions', Array<Pick<IPermission, 'permissionId'>>>;
+export type ICreateRol = Pick<IRol, 'rolName' | 'rolDescription'| 'rolStatus'>;
