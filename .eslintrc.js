@@ -35,4 +35,4 @@ module.exports = {
     'class-methods-use-this': 'off',
     'prettier/prettier': ['error', { 'endOfLine': 'auto' }]
   }
-};s
+};
