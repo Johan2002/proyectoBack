@@ -6,9 +6,12 @@ import { Sale } from 'src/Data/entities/sale-entity/sale.entity';
 import { Employee } from 'src/Data/entities/employee-entity/employee.entity';
 import { Product } from 'src/Data/entities/product-entity/product.entity';
 import { Customer } from 'src/Data/entities/customer-entity/customer.entity';
+import { SaleDetail } from 'src/Data/entities/sale-details-entity/sale-details.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Sale, Employee, Customer, Product])],
+  imports: [
+    TypeOrmModule.forFeature([Sale, Employee, Customer, Product, SaleDetail]),
+  ],
   controllers: [SaleController],
   providers: [SaleService],
 })

@@ -17,6 +17,9 @@ export class Sale {
   saleId: string;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
+  subtotal: number;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
   saleTotalPrice: number;
 
   @Column()
@@ -33,6 +36,8 @@ export class Sale {
   @JoinColumn()
   customer: Customer;
 
-  @OneToMany(() => SaleDetail, (saleDetail) => saleDetail.sale)
+  @OneToMany(() => SaleDetail, (saleDetail) => saleDetail.sale, {
+    cascade: true,
+  })
   saleDetails: Array<SaleDetail>;
 }

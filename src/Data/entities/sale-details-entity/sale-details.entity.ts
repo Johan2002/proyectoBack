@@ -19,16 +19,16 @@ export class SaleDetail {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   unitPrice: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
-  subtotal: number;
+  // @Column({ type: 'decimal', precision: 10, scale: 2 })
+  // subtotal: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
-  total: number;
+  // @Column({ type: 'decimal', precision: 10, scale: 2 })
+  // total: number;
 
   @ManyToOne(() => Sale, (sale) => sale.saleDetails)
   @JoinColumn()
   sale: Sale;
 
-  @ManyToOne(() => Product)
-  product: Product;
+  @ManyToOne(() => Product, { nullable: false })
+  product: Array<Product>;
 }

@@ -8,7 +8,6 @@ import {
   Unique,
 } from 'typeorm';
 import { Supplier } from '../supplier-entity/supplier.entity';
-import { Sale } from '../sale-entity/sale.entity';
 import { SaleDetail } from '../sale-details-entity/sale-details.entity';
 
 @Entity()
@@ -26,6 +25,9 @@ export class Product {
   @Column({ type: 'numeric', nullable: false })
   productPrice: number;
 
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: false })
+  productUnitValue: number;
+
   @Column({ type: 'int4', nullable: false })
   productAmount: number;
 
@@ -37,8 +39,10 @@ export class Product {
   })
   supplier: Supplier;
 
-  @OneToMany(() => SaleDetail, (saleDetail) => saleDetail.product, { nullable: true })
-  salesDetails: Array<SaleDetail>;
+  @OneToMany(() => SaleDetail, (saleDetail) => saleDetail.product, {
+    nullable: true,
+  })
+  saleDetails: Array<SaleDetail>;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;

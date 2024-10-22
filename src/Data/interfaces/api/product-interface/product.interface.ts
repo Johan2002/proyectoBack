@@ -1,5 +1,4 @@
 import { ISaleDetail } from '../sale-detail-interface/sale-detail.interface';
-import { ISale } from '../sale-interface/sale.interface';
 import { ISupplier } from '../supplier-interface/supplier.interface';
 
 export interface IProduct {
@@ -8,9 +7,10 @@ export interface IProduct {
   productName: string;
   productPrice: number;
   productAmount: number;
+  productUnitValue: number;
   productDescription: string;
   supplier: ISupplier;
-  salesDetails: Array<ISaleDetail>;
+  saleDetails: Array<ISaleDetail>;
 }
 
 export type ICreateProduct = Pick<
@@ -19,6 +19,7 @@ export type ICreateProduct = Pick<
   | 'productName'
   | 'productPrice'
   | 'productAmount'
+  | 'productUnitValue'
   | 'productDescription'
 > &
   Partial<Pick<ISupplier, 'supplierId'>>;

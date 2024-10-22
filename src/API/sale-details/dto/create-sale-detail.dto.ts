@@ -1,21 +1,18 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IProduct } from 'src/Data/interfaces/api/product-interface/product.interface';
 
 export class CreateSaleDetailDto {
   @IsNumber()
+  @IsNotEmpty()
   quantity: number;
 
   @IsNumber()
+  @IsNotEmpty()
   unitPrice: number;
 
-  @IsNumber()
-  subtotal: number;
-
-  @IsNumber()
-  total: number;
-
   @IsString()
+  @IsNotEmpty()
   sale: string;
 
-  @IsString()
-  product: string;
+  product: Array<IProduct>;
 }

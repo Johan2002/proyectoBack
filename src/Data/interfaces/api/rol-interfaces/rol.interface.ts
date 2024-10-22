@@ -10,4 +10,4 @@ export interface IRol {
   permission: Array<IPermission>;
 }
 
-export type ICreateRol = Pick<IRol, 'rolName' | 'rolDescription'| 'rolStatus'>;
+export type ICreateRol = Pick<IRol, 'rolName' | 'rolDescription' | 'rolStatus'>;

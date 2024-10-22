@@ -17,6 +17,10 @@ export class CreateProductDto {
   @IsNotEmpty()
   productAmount: number;
 
+  @IsNumber()
+  @IsNotEmpty()
+  productUnitValue: number;
+
   @IsString()
   @IsNotEmpty()
   productDescription: string;
