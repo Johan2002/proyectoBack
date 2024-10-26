@@ -8,15 +8,17 @@ import {
   ICreateUser,
   IUser,
 } from 'src/Data/interfaces/api/user-interface/user.interface';
+import { Rol } from 'src/Data/entities/rol-entity/rol.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Rol)
+    private readonly rolRepository: Repository<Rol>,
   ) {}
 
-  // Método para crear un nuevo usuario
   async create({
     rolId,
     employeeId,
@@ -38,10 +40,12 @@ export class UserService {
   }
 
   findOneByEmail(userEmail: string) {
-    return this.userRepository.findOneBy({ userEmail });
+    return this.userRepository.findOne({
+      where: { userEmail },
+      relations: ['rol'],
+    });
   }
 
-  //Método para listar todos los usuarios
   async findAll(): Promise<Array<IUser>> {
     const user = await this.userRepository.find({
       select: ['userId', 'userName', 'userEmail'],
@@ -50,7 +54,6 @@ export class UserService {
     return user;
   }
 
-  //Método para listar usuario por uuid
   async findOne(id: string): Promise<IUser> {
     const user = await this.userRepository.findOne({
       where: { userId: id },
@@ -60,7 +63,6 @@ export class UserService {
     return user;
   }
 
-  //Método para actualizar a usuarios
   async update(id: string, updateUserDto: UpdateUserDto): Promise<IUser> {
     const user = await this.userRepository.findOne({ where: { userId: id } });
     if (!user) {
@@ -71,6 +73,16 @@ export class UserService {
       delete updateUserDto.userPassword;
     }
 
+    if (updateUserDto.rolId) {
+      const rol = await this.rolRepository.findOne({
+        where: { rolId: updateUserDto.rolId },
+      });
+      if (!rol) {
+        throw new NotFoundException('Rol not found');
+      }
+      user.rol = rol;
+    }
+
     Object.assign(user, updateUserDto);
 
     delete user.userPassword;
@@ -78,7 +90,6 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  //Método para borrar a usuarios
   async remove(id: string) {
     await this.findOne(id);
     return await this.userRepository.delete(id);

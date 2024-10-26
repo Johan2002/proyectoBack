@@ -9,9 +9,13 @@ import { ProductModule } from './product/product.module';
 import { SaleModule } from './sale/sale.module';
 import { PermissionModule } from './permission/permission.module';
 import { RolModule } from './rol/rol.module';
-import { ProductSaleModule } from './product-sale/product-sale.module';
 import { AuthModule } from './auth/auth.module';
 import { SaleDetailsModule } from './sale-details/sale-details.module';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from 'src/Data/guards/auth.guard';
+import { JwtModule } from '@nestjs/jwt';
+import { RolesAndPermissionsGuard } from 'src/data/guards/roles-permissions.guard';
+import { TaxesModule } from './taxes/taxes.module';
 
 @Module({
   imports: [
@@ -26,8 +30,19 @@ import { SaleDetailsModule } from './sale-details/sale-details.module';
     PermissionModule,
     RolModule,
     AuthModule,
-    ProductSaleModule,
     SaleDetailsModule,
+    JwtModule,
+    TaxesModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesAndPermissionsGuard,
+    },
   ],
 })
 export class ApiModule {}

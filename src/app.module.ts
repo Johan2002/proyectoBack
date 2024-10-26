@@ -1,15 +1,23 @@
-// import { RolesGuard } from './Data/guards/role.guard';
 import { ApiModule } from './API/api.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmConfigAsync } from './Data/database-config/type-orm-config';
-import { AuthGuard } from './Data/guards/auth.guard';
-import { AllExceptionsFilter } from './Data/filters/filter-exceptions.filter';
-import { TransformAndExceptionInterceptor } from './Data/interceptor/error-interceptor';
+import { AllExceptionsFilter } from './Data/interceptor/catch/error-interceptor';
+import { ResponseInterceptor } from './Data/interceptor/response/response.interceptor';
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [TypeOrmModule.forRootAsync(TypeOrmConfigAsync), ApiModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: 'common/envs/develop.env',
+    }),
+    TypeOrmModule.forRootAsync(TypeOrmConfigAsync),
+    ApiModule,
+    JwtModule,
+  ],
   controllers: [],
   providers: [
     {
@@ -17,12 +25,8 @@ import { TransformAndExceptionInterceptor } from './Data/interceptor/error-inter
       useClass: AllExceptionsFilter,
     },
     {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
-    },
-    {
       provide: APP_INTERCEPTOR,
-      useClass: TransformAndExceptionInterceptor,
+      useClass: ResponseInterceptor,
     },
   ],
 })

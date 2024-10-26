@@ -3,7 +3,6 @@ import { UpdateHeadquarterDto } from './dto/update-headquarter.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Headquarter } from 'src/Data/entities/headquarter-entity/headquarter.entity';
 import { Repository } from 'typeorm';
-import { Company } from 'src/Data/entities/company-entity/company.entity';
 import {
   ICreateHeadquarter,
   IHeadquarter,

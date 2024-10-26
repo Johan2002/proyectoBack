@@ -6,31 +6,29 @@ import {
   Patch,
   Param,
   Delete,
-  HttpCode,
-  HttpStatus,
 } from '@nestjs/common';
 import { SupplierService } from './supplier.service';
 import { CreateSupplierDto } from './dto/create-supplier.dto';
 import { UpdateSupplierDto } from './dto/update-supplier.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@ApiTags('supplier')
 @Controller('supplier')
 export class SupplierController {
   constructor(private readonly supplierService: SupplierService) {}
 
   @Post()
-  @HttpCode(HttpStatus.CREATED)
   create(@Body() createSupplierDto: CreateSupplierDto) {
     return this.supplierService.create(createSupplierDto);
   }
 
   @Get()
-  @HttpCode(HttpStatus.FOUND)
   findAll() {
     return this.supplierService.findAll();
   }
 
   @Get(':id')
-  @HttpCode(HttpStatus.FOUND)
   findOne(@Param('id') id: string) {
     return this.supplierService.findOne(id);
   }

@@ -14,12 +14,8 @@ export class ProductService {
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
   ) {}
-  async create({
-    supplierId,
-    ...createProduct
-  }: ICreateProduct): Promise<IProduct> {
+  async create({ ...createProduct }: ICreateProduct): Promise<IProduct> {
     const { productId }: IProduct = await this.productRepository.save({
-      supplier: { supplierId },
       ...createProduct,
     });
     const product = await this.productRepository.findOne({
@@ -31,7 +27,7 @@ export class ProductService {
 
   async findAll(): Promise<Array<IProduct>> {
     return await this.productRepository.find({
-      relations: ['supplier', 'saleDetails'],
+      relations: ['supplier', 'tax'],
     });
   }
 

@@ -1,27 +1,49 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
+  IsArray,
+  IsInt,
   IsNotEmpty,
   IsNumber,
   IsString,
+  IsUUID,
+  Min,
   ValidateNested,
 } from 'class-validator';
-import { Type } from 'class-transformer';
-import { CreateSaleDetailDto } from 'src/API/sale-details/dto/create-sale-detail.dto';
+import { ICustomer } from 'src/Data/interfaces/api/costumer-interface/costumer.interface';
+import { IEmployee } from 'src/Data/interfaces/api/employee-interface/employee.interface';
 
 export class CreateSaleDto {
-  @IsNumber()
-  subtotal: number;
-
+  @ApiProperty({ description: 'Precio total de la venta' })
   @IsNumber()
   saleTotalPrice: number;
 
+  @ApiProperty({ description: 'Metodo de pago de la venta' })
   @IsString()
   salePaymentMethod: string;
 
-  @IsString()
+  @ApiProperty({ description: 'ID del Empleados' })
+  @IsUUID()
   @IsNotEmpty()
-  employee: string;
+  employee: IEmployee;
 
-  @IsString()
+  @ApiProperty({ description: 'ID del Clientes' })
+  @IsUUID()
   @IsNotEmpty()
-  customer: string;
+  customer: ICustomer;
+
+  @ApiProperty({ description: 'IDs de productos' })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ProductQuantityDto)
+  products: Array<ProductQuantityDto>;
+}
+
+export class ProductQuantityDto {
+  @IsUUID()
+  productId: string;
+
+  @IsInt()
+  @Min(1)
+  quantity: number;
 }

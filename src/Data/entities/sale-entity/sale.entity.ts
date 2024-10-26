@@ -20,6 +20,9 @@ export class Sale {
   subtotal: number;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
+  totalTaxes: number;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
   saleTotalPrice: number;
 
   @Column()

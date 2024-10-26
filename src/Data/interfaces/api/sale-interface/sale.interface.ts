@@ -1,5 +1,6 @@
 import { ICustomer } from '../costumer-interface/costumer.interface';
 import { IEmployee } from '../employee-interface/employee.interface';
+import { IProduct } from '../product-interface/product.interface';
 import { ISaleDetail } from '../sale-detail-interface/sale-detail.interface';
 
 export interface ISale {
@@ -13,11 +14,16 @@ export interface ISale {
   saleDetails: Array<ISaleDetail>;
 }
 
-export type ICreateSale = Pick<
-  ISale,
-  'subtotal' | 'salePaymentMethod' | 'saleTotalPrice'
-> &
-  Partial<Pick<IEmployee, 'employeeId'>> &
-  Partial<Pick<ICustomer, 'customerId'>> & {
-    saleDetails?: Array<Partial<ISaleDetail>>;
-  };
+// export type ICreateSale = Omit<ISale, 'saleId' | 'saleDetails' | 'saleDate'> &
+//   Partial<Pick<IEmployee, 'employeeId'>> &
+//   Partial<Pick<ICustomer, 'customerId'>> &
+//   Record<'saleDetails', Array<Pick<ISaleDetail, 'saleDetailId'>>>;
+
+export type ICreateSale = Pick<ISale, 'salePaymentMethod'> & {
+  employeeId: string;
+  customerId: string;
+  products: Array<Products>;
+};
+
+type Products = Pick<IProduct, 'productId'> & Pick<ISaleDetail, 'quantity'>;
+export type IUpdateSale = Partial<ICreateSale>;

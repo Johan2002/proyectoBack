@@ -7,7 +7,6 @@ import {
   ICreateEmployee,
   IEmployee,
 } from 'src/Data/interfaces/api/employee-interface/employee.interface';
-import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class EmployeeService {

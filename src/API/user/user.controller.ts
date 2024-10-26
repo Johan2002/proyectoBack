@@ -6,33 +6,33 @@ import {
   Patch,
   Param,
   Delete,
-  HttpCode,
-  HttpStatus,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Public } from 'src/Data/decorators/public.decorator';
+import { Roles } from 'src/data/decorators/roles.decorator';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
   @Public()
-  @HttpCode(HttpStatus.CREATED)
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
   @Get()
-  @HttpCode(HttpStatus.FOUND)
+  @Roles('employee', 'admin')
   findAll() {
     return this.userService.findAll();
   }
 
   @Get(':id')
-  @HttpCode(HttpStatus.FOUND)
   findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
   }

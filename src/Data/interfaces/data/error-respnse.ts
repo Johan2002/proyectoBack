@@ -1,8 +1,5 @@
-export class ICatchRespose {
+export interface IResponse<T> {
   status: number;
   message: string;
-  code?: string;
-  path?: string;
-  additionalInfo?: any;
-  stack?: any;
+  result: T;
 }

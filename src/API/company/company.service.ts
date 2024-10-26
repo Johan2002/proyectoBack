@@ -28,9 +28,7 @@ export class CompanyService {
   }
 
   async findAll(): Promise<Array<ICompany>> {
-    return await this.companyRepository.find({
-      relations: ['headquarters', 'suppliers', 'customers'],
-    });
+    return await this.companyRepository.find();
   }
 
   async findOne(id: string): Promise<ICompany> {

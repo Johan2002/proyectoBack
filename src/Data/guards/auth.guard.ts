@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
-import { jwtConstants } from '../constants/jwt.constant';
 import { Reflector } from '@nestjs/core';
 import { PUBLIC_KEY } from '../constants/key-decorator';
 
@@ -30,17 +29,17 @@ export class AuthGuard implements CanActivate {
 
     const token = this.extractTokenFromHeader(request);
     if (!token) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Invalid token.');
     }
 
     try {
       const payload = await this.jwtService.verifyAsync(token, {
-        secret: jwtConstants.secret,
+        secret: process.env.SECRET_JWT,
       });
       request.user = payload;
       console.log('Token payload:', payload);
     } catch (error) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Invalid token.');
     }
 
     return true;

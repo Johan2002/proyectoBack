@@ -6,31 +6,29 @@ import {
   Patch,
   Param,
   Delete,
-  HttpCode,
-  HttpStatus,
 } from '@nestjs/common';
 import { HeadquarterService } from './headquarter.service';
 import { CreateHeadquarterDto } from './dto/create-headquarter.dto';
 import { UpdateHeadquarterDto } from './dto/update-headquarter.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@ApiTags('headquarter')
 @Controller('headquarter')
 export class HeadquarterController {
   constructor(private readonly headquarterService: HeadquarterService) {}
 
   @Post()
-  @HttpCode(HttpStatus.CREATED)
   create(@Body() createHeadquarterDto: CreateHeadquarterDto) {
     return this.headquarterService.create(createHeadquarterDto);
   }
 
   @Get()
-  @HttpCode(HttpStatus.FOUND)
   findAll() {
     return this.headquarterService.findAll();
   }
 
   @Get(':id')
-  @HttpCode(HttpStatus.FOUND)
   findOne(@Param('id') id: string) {
     return this.headquarterService.findOne(id);
   }

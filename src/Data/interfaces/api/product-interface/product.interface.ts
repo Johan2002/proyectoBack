@@ -1,5 +1,5 @@
-import { ISaleDetail } from '../sale-detail-interface/sale-detail.interface';
 import { ISupplier } from '../supplier-interface/supplier.interface';
+import { ITax } from '../taxes-interface/taxes.interface';
 
 export interface IProduct {
   productId: string;
@@ -10,16 +10,9 @@ export interface IProduct {
   productUnitValue: number;
   productDescription: string;
   supplier: ISupplier;
-  saleDetails: Array<ISaleDetail>;
+  tax: Array<ITax>;
 }
 
-export type ICreateProduct = Pick<
-  IProduct,
-  | 'productCode'
-  | 'productName'
-  | 'productPrice'
-  | 'productAmount'
-  | 'productUnitValue'
-  | 'productDescription'
-> &
-  Partial<Pick<ISupplier, 'supplierId'>>;
+export type ICreateProduct = Omit<IProduct, 'productId' | 'tax'> &
+  Partial<Pick<ISupplier, 'supplierId'>> &
+  Record<'tax', Array<Pick<ITax, 'taxId'>>>;

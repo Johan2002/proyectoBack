@@ -5,11 +5,17 @@ export interface ISaleDetail {
   saleDetailId: string;
   quantity: number;
   unitPrice: number;
-  // subtotal: number;
-  // total: number;
+  subtotal: number;
+  totalTaxes: number;
+  total: number;
   sale: ISale;
-  product: Array<IProduct>;
+  product: IProduct;
 }
 
-export type ICreateSaleDetail = Pick<ISaleDetail, 'quantity' | 'unitPrice'> &
-  Partial<Pick<ISale, 'saleId'>> & { product?: Array<Partial<IProduct>> };
+export type ICreateSaleDetail = Omit<
+  ISaleDetail,
+  'saleDetailId' | 'sale' | 'product'
+> & {
+  saleId: string;
+  productId: string;
+};
