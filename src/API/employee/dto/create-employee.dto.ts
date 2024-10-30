@@ -5,12 +5,14 @@ import {
   IsPhoneNumber,
   IsString,
   IsUUID,
+  MinLength,
 } from 'class-validator';
 
 export class CreateEmployeeDto {
   @ApiProperty({ description: 'Documento del empeleado' })
   @IsString()
   @IsNotEmpty()
+  @MinLength(10)
   employeeIdentity: string;
 
   @ApiProperty({ description: 'Nombre del empleado' })

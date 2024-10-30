@@ -16,6 +16,8 @@ import { AuthGuard } from 'src/Data/guards/auth.guard';
 import { JwtModule } from '@nestjs/jwt';
 import { RolesAndPermissionsGuard } from 'src/data/guards/roles-permissions.guard';
 import { TaxesModule } from './taxes/taxes.module';
+import { ReportsModule } from './reports/reports.module';
+import { PrinterModule } from './printer/printer.module';
 
 @Module({
   imports: [
@@ -33,6 +35,8 @@ import { TaxesModule } from './taxes/taxes.module';
     SaleDetailsModule,
     JwtModule,
     TaxesModule,
+    ReportsModule,
+    PrinterModule,
   ],
   providers: [
     {

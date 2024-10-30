@@ -22,7 +22,7 @@ export class Sale {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   totalTaxes: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   saleTotalPrice: number;
 
   @Column()

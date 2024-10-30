@@ -14,11 +14,6 @@ export interface ISale {
   saleDetails: Array<ISaleDetail>;
 }
 
-// export type ICreateSale = Omit<ISale, 'saleId' | 'saleDetails' | 'saleDate'> &
-//   Partial<Pick<IEmployee, 'employeeId'>> &
-//   Partial<Pick<ICustomer, 'customerId'>> &
-//   Record<'saleDetails', Array<Pick<ISaleDetail, 'saleDetailId'>>>;
-
 export type ICreateSale = Pick<ISale, 'salePaymentMethod'> & {
   employeeId: string;
   customerId: string;

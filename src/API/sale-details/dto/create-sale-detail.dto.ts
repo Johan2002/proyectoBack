@@ -4,7 +4,6 @@ import {
   IsArray,
   IsInt,
   IsNotEmpty,
-  IsNumber,
   IsString,
   IsUUID,
   Min,
@@ -12,26 +11,19 @@ import {
 } from 'class-validator';
 
 export class CreateSaleDetailDto {
-  @ApiProperty({ description: 'Cantidad de productos' })
-  @IsNumber()
-  @IsNotEmpty()
-  quantity: number;
-
-  @ApiProperty({ description: 'Precio unitario de producto' })
-  @IsNumber()
-  @IsNotEmpty()
-  unitPrice: number;
-
-  subtotal: number;
-
-  totalTaxes: number;
-
-  total: number;
-
-  @ApiProperty({ description: 'ID de la venta' })
+  @ApiProperty({ description: 'Metodo de pago de la venta' })
   @IsString()
+  salePaymentMethod: string;
+
+  @ApiProperty({ description: 'ID del Empleados' })
+  @IsUUID()
   @IsNotEmpty()
-  sale: string;
+  employeeId: string;
+
+  @ApiProperty({ description: 'ID del Clientes' })
+  @IsUUID()
+  @IsNotEmpty()
+  customerId: string;
 
   @ApiProperty({ description: 'IDs de productos' })
   @IsArray()

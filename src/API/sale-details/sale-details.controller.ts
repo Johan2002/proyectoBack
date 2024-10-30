@@ -1,14 +1,14 @@
 import {
   Controller,
-  // Get,
-  // Post,
-  // Body,
+  Get,
+  Post,
+  Body,
   // Patch,
   // Param,
   // Delete,
 } from '@nestjs/common';
 import { SaleDetailsService } from './sale-details.service';
-// import { CreateSaleDetailDto } from './dto/create-sale-detail.dto';
+import { CreateSaleDetailDto } from './dto/create-sale-detail.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 // import { UpdateSaleDetailDto } from './dto/update-sale-detail.dto';
 
@@ -18,15 +18,15 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 export class SaleDetailsController {
   constructor(private readonly saleDetailsService: SaleDetailsService) {}
 
-  // @Post()
-  // create(@Body() createSaleDetailDto: CreateSaleDetailDto) {
-  //   return this.saleDetailsService.create(createSaleDetailDto);
-  // }
+  @Post()
+  create(@Body() createSaleDetailDto: CreateSaleDetailDto) {
+    return this.saleDetailsService.create(createSaleDetailDto);
+  }
 
-  // @Get()
-  // findAll() {
-  //   return this.saleDetailsService.findAll();
-  // }
+  @Get()
+  findAll() {
+    return this.saleDetailsService.findAll();
+  }
 
   // @Get(':id')
   // findOne(@Param('id') id: string) {

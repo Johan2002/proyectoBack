@@ -4,20 +4,13 @@ import {
   IsArray,
   IsInt,
   IsNotEmpty,
-  IsNumber,
   IsString,
   IsUUID,
   Min,
   ValidateNested,
 } from 'class-validator';
-import { ICustomer } from 'src/Data/interfaces/api/costumer-interface/costumer.interface';
-import { IEmployee } from 'src/Data/interfaces/api/employee-interface/employee.interface';
 
 export class CreateSaleDto {
-  @ApiProperty({ description: 'Precio total de la venta' })
-  @IsNumber()
-  saleTotalPrice: number;
-
   @ApiProperty({ description: 'Metodo de pago de la venta' })
   @IsString()
   salePaymentMethod: string;
@@ -25,12 +18,12 @@ export class CreateSaleDto {
   @ApiProperty({ description: 'ID del Empleados' })
   @IsUUID()
   @IsNotEmpty()
-  employee: IEmployee;
+  employeeId: string;
 
   @ApiProperty({ description: 'ID del Clientes' })
   @IsUUID()
   @IsNotEmpty()
-  customer: ICustomer;
+  customerId: string;
 
   @ApiProperty({ description: 'IDs de productos' })
   @IsArray()
