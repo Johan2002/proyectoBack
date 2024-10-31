@@ -4,6 +4,7 @@ interface Employee {
   employeeName: string;
   employeeLastname: string;
   employeeEmail: string;
+  employeePhone: string;
 }
 
 interface Company {
@@ -18,6 +19,7 @@ interface Customer {
   customerLastname: string;
   customerIdentity: string;
   customerEmail: string;
+  customerPhone: string;
 }
 
 interface Sale {
@@ -36,12 +38,14 @@ interface Sale {
         'customerName', cl."customerName",
         'customerLastname', cl."customerLastname",
         'customerIdentity', cl."customerIdentity",
-        'customerEmail', cl."customerEmail"
+        'customerEmail', cl."customerEmail",
+        'customerPhone', cl."customerPhone"
       ) AS customer,
       jsonb_build_object(
         'employeeName', em."employeeName",
         'employeeLastname', em."employeeLastname",
-        'employeeEmail', em."employeeEmail"
+        'employeeEmail', em."employeeEmail",
+        'employeePhone', em."employeePhone"
       ) AS employee,
       (
         SELECT jsonb_build_object(
@@ -90,9 +94,11 @@ interface Sale {
       cl."customerLastname",
       cl."customerIdentity",
       cl."customerEmail",
+      cl."customerPhone",
       em."employeeName",
       em."employeeLastname",
       em."employeeEmail",
+      em."employeePhone",
       s."saleDate",
       s."saleTotalPrice",
       s."salePaymentMethod"

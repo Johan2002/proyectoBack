@@ -12,7 +12,7 @@ export class CreateCustomerDto {
   @ApiProperty({ description: 'Documento del cliente' })
   @IsString()
   @IsNotEmpty()
-  @MinLength(10)
+  @MinLength(6)
   customerIdentity: string;
 
   @ApiProperty({ description: 'Nombre del cliente' })

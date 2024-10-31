@@ -12,7 +12,7 @@ export class CreateEmployeeDto {
   @ApiProperty({ description: 'Documento del empeleado' })
   @IsString()
   @IsNotEmpty()
-  @MinLength(10)
+  @MinLength(6)
   employeeIdentity: string;
 
   @ApiProperty({ description: 'Nombre del empleado' })
