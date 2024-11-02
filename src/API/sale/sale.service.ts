@@ -16,6 +16,7 @@ import {
 } from 'src/Data/interfaces/api/sale-interface/sale.interface';
 import { User } from 'src/Data/entities/user-entity/user.entity';
 import { formatInTimeZone } from 'date-fns-tz';
+import { Company } from 'src/Data/entities/company-entity/company.entity';
 
 @Injectable()
 export class SaleService {
@@ -30,10 +31,12 @@ export class SaleService {
     private readonly saleDetailRepository: Repository<SaleDetail>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Company)
+    private readonly companyRepository: Repository<Company>,
     private readonly dataSource: DataSource,
   ) {}
   async create(userId: string, createSale: ICreateSale) {
-    const { customerId, products, salePaymentMethod } = createSale;
+    const { customerId, companyId, products, salePaymentMethod } = createSale;
 
     const productMap = new Map<
       string,
@@ -61,6 +64,14 @@ export class SaleService {
         throw new NotFoundException('Customer not found.');
       }
 
+      const company = await this.companyRepository.findOne({
+        where: { companyId },
+      });
+
+      if (!company) {
+        throw new NotFoundException('Company not found.');
+      }
+
       const user = await this.userRepository.findOne({
         where: { userId },
         relations: { employee: true },
@@ -81,6 +92,7 @@ export class SaleService {
         saleDate: new Date(nowInColombia),
         salePaymentMethod,
         employee: user.employee,
+        company,
         customer,
         subtotal: 0,
         totalTaxes: 0,
@@ -99,8 +111,6 @@ export class SaleService {
         if (!product) {
           throw new NotFoundException('Product not found.');
         }
-
-        console.log('product :>> ', product);
 
         if (product.productAmount < quantity) {
           throw new ConflictException(
@@ -156,29 +166,18 @@ export class SaleService {
 
   async findAll(): Promise<Array<ISale>> {
     return await this.saleRepository.find({
-      relations: ['employee', 'customer', 'saleDetails.product.tax'],
+      relations: ['employee', 'customer', 'company', 'saleDetails.product.tax'],
     });
   }
 
   async findOne(id: string): Promise<ISale> {
     const sale = await this.saleRepository.findOne({
       where: { saleId: id },
-      relations: ['employee', 'customer', 'saleDetails'],
+      relations: ['employee', 'customer', 'company', 'saleDetails'],
     });
     if (!sale) {
       throw new BadRequestException('Sale not found.');
     }
     return sale;
   }
-
-  // async update(id: string, updateSaleDto: UpdateSaleDto): Promise<ISale> {
-  //   const sale = await this.saleRepository.findOne({
-  //     where: { saleId: id },
-  //   });
-  //   if (!sale) {
-  //     throw new BadRequestException('Sale not found.');
-  //   }
-  //   Object.assign(sale, updateSaleDto);
-  //   return this.saleRepository.save(sale);
-  // }
 }

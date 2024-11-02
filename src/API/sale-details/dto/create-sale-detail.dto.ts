@@ -20,6 +20,11 @@ export class CreateSaleDetailDto {
   @IsNotEmpty()
   employeeId: string;
 
+  @ApiProperty({ description: 'ID de la empresa' })
+  @IsUUID()
+  @IsNotEmpty()
+  companyId: string;
+
   @ApiProperty({ description: 'ID del Clientes' })
   @IsUUID()
   @IsNotEmpty()

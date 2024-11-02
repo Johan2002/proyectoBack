@@ -24,7 +24,7 @@ export class User {
   @Column({ type: 'varchar', nullable: false })
   userPassword: string;
 
-  @OneToOne(() => Employee, (employee) => employee.user, { nullable: false })
+  @OneToOne(() => Employee, (employee) => employee.user, { nullable: true })
   @JoinColumn()
   employee: Employee;
 

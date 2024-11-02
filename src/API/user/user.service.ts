@@ -9,6 +9,7 @@ import {
   IUser,
 } from 'src/Data/interfaces/api/user-interface/user.interface';
 import { Rol } from 'src/Data/entities/rol-entity/rol.entity';
+import { Employee } from 'src/Data/entities/employee-entity/employee.entity';
 
 @Injectable()
 export class UserService {
@@ -17,6 +18,8 @@ export class UserService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Rol)
     private readonly rolRepository: Repository<Rol>,
+    @InjectRepository(Employee)
+    private readonly employeeRepository: Repository<Employee>,
   ) {}
 
   async create({
@@ -25,6 +28,10 @@ export class UserService {
     ...createUser
   }: ICreateUser): Promise<IUser> {
     createUser.userPassword = await bcrypt.hash(createUser.userPassword, 10);
+
+    if (!employeeId) {
+      employeeId = null;
+    }
 
     const { userId }: IUser = await this.userRepository.save({
       rol: { rolId },
@@ -73,19 +80,33 @@ export class UserService {
       delete updateUserDto.userPassword;
     }
 
+    if (updateUserDto.employeeId === '') {
+      updateUserDto.employeeId = null;
+    }
+
     if (updateUserDto.rolId) {
       const rol = await this.rolRepository.findOne({
         where: { rolId: updateUserDto.rolId },
       });
       if (!rol) {
-        throw new NotFoundException('Rol not found');
+        throw new NotFoundException('Rol not found.');
       }
       user.rol = rol;
     }
 
-    Object.assign(user, updateUserDto);
+    if (updateUserDto.employeeId !== null) {
+      const employee = await this.employeeRepository.findOne({
+        where: { employeeId: updateUserDto.employeeId },
+      });
+      if (!employee) {
+        throw new NotFoundException('Employee not found.');
+      }
+      user.employee = employee;
+    } else {
+      user.employee = null;
+    }
 
-    delete user.userPassword;
+    Object.assign(user, updateUserDto);
 
     return this.userRepository.save(user);
   }

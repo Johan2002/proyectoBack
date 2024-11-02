@@ -19,9 +19,10 @@ export const TypeOrmConfigAsync: TypeOrmModuleAsyncOptions = {
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
       entities: ['dist/**/*.entity.{ts,js}'],
+      migrations: ['dist/migration/**/*{.ts,.js}'],
       logger: 'file',
       autoLoadEntities: true,
-      synchronize: process.env.DATABASE_SYNC === 'true' ? true : false,
+      // synchronize: process.env.DATABASE_SYNC === 'true' ? true : false,
       extra: {
         max: 10,
       },

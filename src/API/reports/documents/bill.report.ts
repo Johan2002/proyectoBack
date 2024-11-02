@@ -1,5 +1,5 @@
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
-import { SaleView } from 'src/data/entities/view/sale-viwe-entity';
+import { SaleView } from 'src/data/entities/view/sale-view.entity';
 import { Formatter } from 'src/data/helpers/formatter.helper';
 import { StyleInvoice } from 'src/data/constants/styley-invoice.contant';
 
@@ -16,8 +16,6 @@ export function billReport(saleData: SaleView): TDocumentDefinitions {
       }))
     : [];
 
-  console.log('productName :>> ', saleData.sale_detail);
-  console.log('company :>> ', saleData.company);
   const facturaNumero = Math.floor(100000 + Math.random() * 900000);
 
   return {
@@ -53,7 +51,6 @@ export function billReport(saleData: SaleView): TDocumentDefinitions {
           },
         ],
       },
-
       {
         text: [
           {
@@ -63,29 +60,12 @@ export function billReport(saleData: SaleView): TDocumentDefinitions {
             bold: true,
             color: '#000000',
           },
-          `\n${saleData.company.companyAdress}\nNit: ${saleData.company.companyNit}\n${saleData.company.companyPhone}\n`,
+          `\nNit: ${saleData.company.companyNit}\n${saleData.company.companyAddress}\n${saleData.company.companyPhone}\n${saleData.company.companyEmail}`,
         ],
         margin: [0, 5],
         alignment: 'center',
       },
-
-      {
-        columns: [
-          {
-            width: 'auto',
-            text: [
-              {
-                text: `Factura: ${facturaNumero}\n`,
-                style: 'h3',
-                bold: true,
-              },
-              `Fecha: ${saleData.sale.saleDate}`,
-            ],
-          },
-        ],
-      },
-
-      // Datos del cliente
+      // Datos de cliente, empleado y factura
       {
         columns: [
           {
@@ -102,18 +82,28 @@ export function billReport(saleData: SaleView): TDocumentDefinitions {
           {
             text: [
               {
+                text: `Factura: ${facturaNumero}\n`,
+                style: 'h3',
+                bold: true,
+              },
+              `Fecha: ${saleData.sale.saleDate}`,
+            ],
+            alignment: 'center',
+          },
+          {
+            text: [
+              {
                 text: 'Facturado por:\n',
                 style: 'h2',
                 bold: true,
               },
-              `${saleData.employee.employeeName} ${saleData.employee.employeeLastname}\nEmail: ${saleData.employee.employeeEmail}\nPhone: ${saleData.employee.employeePhone}\n`,
+              `${saleData.employee.employeeName} ${saleData.employee.employeeLastname} Email: ${saleData.employee.employeeEmail}\nCC: ${saleData.employee.employeeIdentity}\nPhone: ${saleData.employee.employeePhone}\n`,
             ],
             alignment: 'right',
           },
         ],
         margin: [0, 10],
       },
-
       {
         canvas: [
           {
@@ -127,13 +117,12 @@ export function billReport(saleData: SaleView): TDocumentDefinitions {
         ],
         margin: [0, 20],
       },
-
       // Tabla con los detalles de los productos
       {
         margin: [0, 20],
         layout: 'lightHorizontalLines',
         table: {
-          widths: [50, 80, 'auto', 'auto', 'auto', 'auto', 'auto'],
+          widths: [50, 80, 'auto', 'auto', 'auto', 'auto', 80],
           headerRows: 1,
           body: [
             // Encabezado
@@ -311,7 +300,7 @@ export function billReport(saleData: SaleView): TDocumentDefinitions {
                 fillColor: '#000000',
                 color: '#FFFFFF',
                 margin: [5, 5],
-                fontSize: 14,
+                fontSize: 10,
                 border: [true, true, true, true],
               },
             ],
@@ -319,7 +308,6 @@ export function billReport(saleData: SaleView): TDocumentDefinitions {
         },
       },
     ],
-
     styles: StyleInvoice,
   };
 }

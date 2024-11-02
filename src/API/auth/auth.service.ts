@@ -23,7 +23,7 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new UnauthorizedException('Please verify credentials.');
     }
-    console.log('user :>> ', user);
+
     const payload = {
       email: user.userEmail,
       sub: user.userId,

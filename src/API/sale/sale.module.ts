@@ -8,6 +8,7 @@ import { Product } from 'src/Data/entities/product-entity/product.entity';
 import { Customer } from 'src/Data/entities/customer-entity/customer.entity';
 import { SaleDetail } from 'src/Data/entities/sale-details-entity/sale-details.entity';
 import { User } from 'src/Data/entities/user-entity/user.entity';
+import { Company } from 'src/Data/entities/company-entity/company.entity';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { User } from 'src/Data/entities/user-entity/user.entity';
       Sale,
       Employee,
       Customer,
+      Company,
       Product,
       SaleDetail,
       User,

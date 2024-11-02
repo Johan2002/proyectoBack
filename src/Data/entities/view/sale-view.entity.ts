@@ -5,13 +5,15 @@ interface Employee {
   employeeLastname: string;
   employeeEmail: string;
   employeePhone: string;
+  employeeIdentity: string;
 }
 
 interface Company {
   companyName: string;
   companyNit: string;
   companyPhone: string;
-  companyAdress: string;
+  companyAddress: string;
+  companyEmail: string;
 }
 
 interface Customer {
@@ -30,6 +32,16 @@ interface Sale {
   salePaymentMethod: string;
 }
 
+interface SaleDetail {
+  productCode: string;
+  productName: string;
+  unitPrice: number;
+  quantity: number;
+  subtotal: number;
+  totalTaxes: number;
+  total: number;
+}
+
 @ViewEntity({
   expression: `
     SELECT
@@ -45,17 +57,15 @@ interface Sale {
         'employeeName', em."employeeName",
         'employeeLastname', em."employeeLastname",
         'employeeEmail', em."employeeEmail",
-        'employeePhone', em."employeePhone"
+        'employeePhone', em."employeePhone",
+        'employeeIdentity', em."employeeIdentity"
       ) AS employee,
-      (
-        SELECT jsonb_build_object(
+      jsonb_build_object(
           'companyName', co."companyName",
           'companyNit', co."companyNit",
           'companyPhone', co."companyPhone",
-          'companyAdress', co."companyAddress"
-        )
-        FROM "company" co
-        LIMIT 1
+          'companyAddress', co."companyAddress",
+          'companyEmail', co."companyEmail"
       ) AS company,
       jsonb_agg(DISTINCT jsonb_build_object(
         'saleDetailId', sd."saleDetailId",
@@ -81,6 +91,8 @@ interface Sale {
     INNER JOIN
       "employee" em ON s."employeeEmployeeId" = em."employeeId"
     INNER JOIN
+      "company" co ON s."companyCompanyId" = co."companyId"  
+    INNER JOIN
       "sale_detail" sd ON s."saleId" = sd."saleSaleId"
     INNER JOIN
       "product" p ON sd."productProductId" = p."productId"
@@ -99,6 +111,12 @@ interface Sale {
       em."employeeLastname",
       em."employeeEmail",
       em."employeePhone",
+      em."employeeIdentity",
+      co."companyName",
+      co."companyNit",
+      co."companyPhone",
+      co."companyAddress",
+      co."companyEmail",
       s."saleDate",
       s."saleTotalPrice",
       s."salePaymentMethod"
@@ -112,16 +130,7 @@ export class SaleView {
   customer: Customer;
 
   @ViewColumn()
-  sale_detail: Array<{
-    saleDetailId: string;
-    quantity: number;
-    unitPrice: number;
-    subtotal: number;
-    totalTaxes: number;
-    total: number;
-    productCode: string;
-    productName: string;
-  }>;
+  sale_detail: Array<SaleDetail>;
 
   @ViewColumn()
   sale: Sale;

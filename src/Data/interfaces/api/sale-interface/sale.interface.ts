@@ -1,3 +1,4 @@
+import { ICompany } from '../company-interface/company.interface';
 import { ICustomer } from '../costumer-interface/costumer.interface';
 import { IEmployee } from '../employee-interface/employee.interface';
 import { IProduct } from '../product-interface/product.interface';
@@ -11,10 +12,12 @@ export interface ISale {
   saleDate: Date;
   employee: IEmployee;
   customer: ICustomer;
+  company: ICompany;
   saleDetails: Array<ISaleDetail>;
 }
 
 export type ICreateSale = Pick<ISale, 'salePaymentMethod'> & {
+  companyId: string;
   employeeId: string;
   customerId: string;
   products: Array<Products>;

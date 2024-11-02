@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
-import PdfPrinter from 'pdfmake/src/printer'; // Asegúrate de que la ruta es correcta
-import { SaleView } from 'src/data/entities/view/sale-viwe-entity';
+import PdfPrinter from 'pdfmake/src/printer';
+import { SaleView } from 'src/data/entities/view/sale-view.entity';
 import { billReport } from './documents/bill.report';
 
 @Injectable()
@@ -35,10 +35,7 @@ export class ReportsService {
     });
   }
 
-  async getBillData(
-    saleId: string,
-    // companyId: string,
-  ): Promise<TDocumentDefinitions> {
+  async getBillData(saleId: string): Promise<TDocumentDefinitions> {
     try {
       const saleData = await this.saleViewRepository.findOne({
         where: { saleId },
@@ -46,13 +43,6 @@ export class ReportsService {
       if (!saleData) {
         throw new Error('Sale data not found');
       }
-
-      // const company = await this.saleViewRepository.findOne({
-      //   where: { companyId },
-      // });
-      // if (!company) {
-      //   throw new Error('Company not found');
-      // }
       return billReport(saleData);
     } catch (error) {
       console.error('Error retrieving sale data:', error);
