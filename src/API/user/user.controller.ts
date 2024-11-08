@@ -3,16 +3,17 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Public } from 'src/Data/decorators/public.decorator';
-import { Roles } from 'src/data/decorators/roles.decorator';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Permissions } from 'src/data/decorators/permission.decorator';
+import { Permission } from 'src/data/constants/permission.enum';
 
 @ApiBearerAuth()
 @ApiTags('user')
@@ -22,32 +23,34 @@ export class UserController {
 
   @Post()
   @Public()
-  @Roles('admin')
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
   @Get()
-  @Roles('admin', 'employee')
+  @Permissions(Permission.ADMIN_ALL)
   findAll() {
     return this.userService.findAll();
   }
 
-  @Get(':id')
-  @Roles('admin')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(id);
+  @Get(':userId')
+  @Permissions(Permission.ADMIN_ALL)
+  findOne(@Param('userId') userId: string) {
+    return this.userService.findOne(userId);
   }
 
-  @Patch(':id')
-  @Roles('admin')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(id, updateUserDto);
+  @Put(':userId')
+  @Permissions(Permission.ADMIN_ALL)
+  update(
+    @Param('userId') userId: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return this.userService.update(userId, updateUserDto);
   }
 
-  @Delete(':id')
-  @Roles('admin')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(id);
+  @Delete(':userId')
+  @Permissions(Permission.ADMIN_ALL)
+  remove(@Param('userId') userId: string) {
+    return this.userService.remove(userId);
   }
 }

@@ -3,15 +3,16 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { TaxesService } from './taxes.service';
 import { CreateTaxDto } from './dto/create-tax.dto';
 import { UpdateTaxDto } from './dto/update-tax.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Roles } from 'src/data/decorators/roles.decorator';
+import { Permission } from 'src/data/constants/permission.enum';
+import { Permissions } from 'src/data/decorators/permission.decorator';
 
 @ApiBearerAuth()
 @ApiTags('taxes')
@@ -20,32 +21,32 @@ export class TaxesController {
   constructor(private readonly taxesService: TaxesService) {}
 
   @Post()
-  @Roles('admin')
+  @Permissions(Permission.ADMIN_ALL)
   create(@Body() createTaxDto: CreateTaxDto) {
     return this.taxesService.create(createTaxDto);
   }
 
   @Get()
-  @Roles('admin')
+  @Permissions(Permission.ADMIN_ALL)
   findAll() {
     return this.taxesService.findAll();
   }
 
-  @Get(':id')
-  @Roles('admin')
-  findOne(@Param('id') id: string) {
-    return this.taxesService.findOne(id);
+  @Get(':taxId')
+  @Permissions(Permission.ADMIN_ALL)
+  findOne(@Param('taxId') taxId: string) {
+    return this.taxesService.findOne(taxId);
   }
 
-  @Patch(':id')
-  @Roles('admin')
-  update(@Param('id') id: string, @Body() updateTaxDto: UpdateTaxDto) {
-    return this.taxesService.update(id, updateTaxDto);
+  @Put(':taxId')
+  @Permissions(Permission.ADMIN_ALL)
+  update(@Param('taxId') taxId: string, @Body() updateTaxDto: UpdateTaxDto) {
+    return this.taxesService.update(taxId, updateTaxDto);
   }
 
-  @Delete(':id')
-  @Roles('admin')
-  remove(@Param('id') id: string) {
-    return this.taxesService.remove(id);
+  @Delete(':taxId')
+  @Permissions(Permission.ADMIN_ALL)
+  remove(@Param('taxId') taxId: string) {
+    return this.taxesService.remove(taxId);
   }
 }

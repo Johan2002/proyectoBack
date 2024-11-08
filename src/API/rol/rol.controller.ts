@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put } from '@nestjs/common';
 import { RolService } from './rol.service';
 import { CreateRolDto } from './dto/create-rol.dto';
 import { UpdateRolDto } from './dto/update-rol.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Roles } from 'src/data/decorators/roles.decorator';
+import { Permission } from 'src/data/constants/permission.enum';
+import { Permissions } from 'src/data/decorators/permission.decorator';
 
 @ApiBearerAuth()
 @ApiTags('rol')
@@ -12,26 +13,26 @@ export class RolController {
   constructor(private readonly rolService: RolService) {}
 
   @Post()
-  @Roles('admin')
+  @Permissions(Permission.ADMIN_ALL)
   create(@Body() createRolDto: CreateRolDto) {
     return this.rolService.create(createRolDto);
   }
 
   @Get()
-  @Roles('admin')
+  @Permissions(Permission.ADMIN_ALL)
   findAll() {
     return this.rolService.findAll();
   }
 
-  @Get(':id')
-  @Roles('admin')
-  findOne(@Param('id') id: string) {
-    return this.rolService.findOne(id);
+  @Get(':rolId')
+  @Permissions(Permission.ADMIN_ALL)
+  findOne(@Param('rolId') rolId: string) {
+    return this.rolService.findOne(rolId);
   }
 
-  @Patch(':id')
-  @Roles('admin')
-  update(@Param('id') id: string, @Body() updateRolDto: UpdateRolDto) {
-    return this.rolService.update(id, updateRolDto);
+  @Put(':rolId')
+  @Permissions(Permission.ADMIN_ALL)
+  update(@Param('rolId') rolId: string, @Body() updateRolDto: UpdateRolDto) {
+    return this.rolService.update(rolId, updateRolDto);
   }
 }

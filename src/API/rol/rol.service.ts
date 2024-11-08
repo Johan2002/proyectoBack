@@ -1,25 +1,29 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { UpdateRolDto } from './dto/update-rol.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { Rol } from 'src/Data/entities/rol-entity/rol.entity';
 import {
   ICreateRol,
   IRol,
+  IUpdateRol,
 } from 'src/Data/interfaces/api/rol-interfaces/rol.interface';
+import { DataGateway } from 'src/shared/socket/socket.gateway';
 
 @Injectable()
 export class RolService {
-  constructor(
-    @InjectRepository(Rol)
-    private readonly rolRepository: Repository<Rol>,
-  ) {}
+  @InjectRepository(Rol)
+  private readonly rolRepository: Repository<Rol>;
+
+  constructor(private readonly dataGateway: DataGateway) {}
+
   async create({ ...createRol }: ICreateRol): Promise<IRol> {
     const { rolId }: IRol = await this.rolRepository.save({
       ...createRol,
     });
 
     const rol = await this.rolRepository.findOne({ where: { rolId } });
+
+    this.dataGateway.emitData({ acction: 'rol/create', data: rol });
 
     return rol;
   }
@@ -28,26 +32,32 @@ export class RolService {
     return await this.rolRepository.find();
   }
 
-  async findOne(id: string): Promise<IRol> {
+  async findOne(rolId: string): Promise<IRol> {
     const rol = await this.rolRepository.findOne({
-      where: { rolId: id },
+      where: { rolId },
     });
+
     if (!rol) {
       throw new NotFoundException('Rol not found');
     }
+
     return rol;
   }
 
-  async update(id: string, updateRolDto: UpdateRolDto): Promise<IRol> {
-    const rol = await this.rolRepository.findOne({
-      where: { rolId: id },
+  async update(rolId: string, updateRol: IUpdateRol): Promise<IRol> {
+    const updateResult: UpdateResult = await this.rolRepository.update(rolId, {
+      ...updateRol,
     });
-    if (!rol) {
-      throw new NotFoundException('Rol not found');
-    }
 
-    Object.assign(rol, updateRolDto);
+    if (!updateResult)
+      throw new NotFoundException('Rol information could not be updated.');
 
-    return this.rolRepository.save(rol);
+    const rol: IRol = await this.rolRepository.findOne({
+      where: { rolId },
+    });
+
+    this.dataGateway.emitData({ acction: 'rol/update', data: rol });
+
+    return rol;
   }
 }

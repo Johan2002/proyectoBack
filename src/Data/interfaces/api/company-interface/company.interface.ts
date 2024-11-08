@@ -1,6 +1,5 @@
 import { ICustomer } from '../costumer-interface/costumer.interface';
 import { IHeadquarter } from '../headquarter-interface/headquarter.interface';
-import { ISale } from '../sale-interface/sale.interface';
 import { ISupplier } from '../supplier-interface/supplier.interface';
 
 export interface ICompany {
@@ -13,7 +12,6 @@ export interface ICompany {
   headquarters: Array<IHeadquarter>;
   suppliers: Array<ISupplier>;
   customers: Array<ICustomer>;
-  sales: Array<ISale>;
 }
 
 export type ICreateCompany = Pick<
@@ -24,3 +22,4 @@ export type ICreateCompany = Pick<
   | 'companyPhone'
   | 'companyEmail'
 >;
+export type IUpdateCompany = Partial<ICreateCompany>;

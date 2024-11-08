@@ -1,63 +1,84 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   ICreateProduct,
   IProduct,
+  IUpdateProduct,
 } from 'src/Data/interfaces/api/product-interface/product.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from 'src/Data/entities/product-entity/product.entity';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { DataGateway } from 'src/shared/socket/socket.gateway';
 
 @Injectable()
 export class ProductService {
-  constructor(
-    @InjectRepository(Product)
-    private readonly productRepository: Repository<Product>,
-  ) {}
+  @InjectRepository(Product)
+  private readonly productRepository: Repository<Product>;
+
+  constructor(private readonly dataGateway: DataGateway) {}
+
   async create({ ...createProduct }: ICreateProduct): Promise<IProduct> {
     const { productId }: IProduct = await this.productRepository.save({
       ...createProduct,
     });
+
     const product = await this.productRepository.findOne({
       where: { productId },
     });
+
+    this.dataGateway.emitData({ acction: 'product/create', data: product });
 
     return product;
   }
 
   async findAll(): Promise<Array<IProduct>> {
-    return await this.productRepository.find({
-      relations: ['supplier', 'tax'],
-    });
+    return await this.productRepository.find();
   }
 
-  async findOne(id: string): Promise<IProduct> {
+  async findOne(productId: string): Promise<IProduct> {
     const product = await this.productRepository.findOne({
-      where: { productId: id },
-      relations: ['supplier'],
+      where: { productId },
     });
+
     if (!product) {
-      throw new BadRequestException('Product not found.');
+      throw new NotFoundException('Product not found.');
     }
+
     return product;
   }
 
   async update(
-    id: string,
-    updateProductDto: UpdateProductDto,
+    productId: string,
+    updateProduct: IUpdateProduct,
   ): Promise<IProduct> {
+    const updateResult: UpdateResult = await this.productRepository.update(
+      productId,
+      { ...updateProduct },
+    );
+
+    if (!updateResult.affected)
+      throw new NotFoundException('Product information could not be updated.');
+
     const product = await this.productRepository.findOne({
-      where: { productId: id },
+      where: { productId },
     });
-    if (!product) {
-      throw new BadRequestException('Product not found.');
-    }
-    Object.assign(product, updateProductDto);
-    return this.productRepository.save(product);
+
+    this.dataGateway.emitData({ acction: 'product/update', data: product });
+
+    return product;
   }
 
-  async remove(id: string) {
-    await this.findOne(id);
-    return await this.productRepository.delete(id);
+  async remove(productId: string) {
+    const deleteResult: DeleteResult =
+      await this.productRepository.delete(productId);
+
+    if (!deleteResult.affected)
+      throw new NotFoundException('Product not found.');
+
+    this.dataGateway.emitData({
+      acction: 'product/delete',
+      data: { productId },
+    });
+
+    return productId;
   }
 }

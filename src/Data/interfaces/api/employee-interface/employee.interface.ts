@@ -25,3 +25,5 @@ export type ICreateEmployee = Pick<
   | 'employeePhone'
 > &
   Partial<Pick<IHeadquarter, 'headquarterId'>>;
+
+export type IUpdateEmployee = Partial<ICreateEmployee>;

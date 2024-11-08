@@ -1,19 +1,25 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { UpdateCostumerDto } from './dto/update-costumer.dto';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import {
   ICreateCustomer,
   ICustomer,
+  IUpdateCustomer,
 } from 'src/Data/interfaces/api/costumer-interface/costumer.interface';
 import { Customer } from 'src/Data/entities/customer-entity/customer.entity';
+import { DataGateway } from 'src/shared/socket/socket.gateway';
 
 @Injectable()
 export class CostumerService {
-  constructor(
-    @InjectRepository(Customer)
-    private readonly customerRepository: Repository<Customer>,
-  ) {}
+  @InjectRepository(Customer)
+  private readonly customerRepository: Repository<Customer>;
+
+  constructor(private readonly dataGateway: DataGateway) {}
+
   async create({
     companyId,
     ...createCustomer
@@ -27,44 +33,60 @@ export class CostumerService {
       where: { customerId },
     });
 
+    this.dataGateway.emitData({ action: 'customer/create', data: customer });
+
     return customer;
   }
 
   async findAll(): Promise<Array<ICustomer>> {
-    return await this.customerRepository.find({
-      relations: ['company', 'sales'],
-    });
+    return await this.customerRepository.find();
   }
 
-  async findOne(id: string): Promise<ICustomer> {
+  async findOne(customerId: string): Promise<ICustomer> {
     const costumer = await this.customerRepository.findOne({
-      where: { customerId: id },
-      relations: ['company', 'sales'],
+      where: { customerId },
     });
+
     if (!costumer) {
       throw new BadRequestException('Customer not found.');
     }
+
     return costumer;
   }
 
   async update(
-    id: string,
-    updateCostumerDto: UpdateCostumerDto,
+    customerId: string,
+    updateCostumer: IUpdateCustomer,
   ): Promise<ICustomer> {
-    const costumer = await this.customerRepository.findOne({
-      where: { customerId: id },
+    const updateResult: UpdateResult = await this.customerRepository.update(
+      customerId,
+      { ...updateCostumer },
+    );
+
+    if (!updateResult.affected)
+      throw new NotFoundException('company information could not be updated.');
+
+    const customer: ICustomer = await this.customerRepository.findOne({
+      where: { customerId },
     });
-    if (!costumer) {
-      throw new BadRequestException('Customer not found.');
-    }
 
-    Object.assign(costumer, updateCostumerDto);
+    this.dataGateway.emitData({ action: 'customer/update', data: customer });
 
-    return this.customerRepository.save(costumer);
+    return customer;
   }
 
-  async remove(id: string) {
-    await this.findOne(id);
-    return await this.customerRepository.delete(id);
+  async remove(customerId: string): Promise<string> {
+    const deleteResult: DeleteResult =
+      await this.customerRepository.delete(customerId);
+
+    if (!deleteResult.affected)
+      throw new NotFoundException('Customer not fonud.');
+
+    this.dataGateway.emitData({
+      action: 'customer/delete',
+      data: { customerId },
+    });
+
+    return customerId;
   }
 }

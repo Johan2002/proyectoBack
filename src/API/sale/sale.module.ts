@@ -8,7 +8,8 @@ import { Product } from 'src/Data/entities/product-entity/product.entity';
 import { Customer } from 'src/Data/entities/customer-entity/customer.entity';
 import { SaleDetail } from 'src/Data/entities/sale-details-entity/sale-details.entity';
 import { User } from 'src/Data/entities/user-entity/user.entity';
-import { Company } from 'src/Data/entities/company-entity/company.entity';
+import { Headquarter } from 'src/Data/entities/headquarter-entity/headquarter.entity';
+import { DataGateway } from 'src/shared/socket/socket.gateway';
 
 @Module({
   imports: [
@@ -16,13 +17,13 @@ import { Company } from 'src/Data/entities/company-entity/company.entity';
       Sale,
       Employee,
       Customer,
-      Company,
+      Headquarter,
       Product,
       SaleDetail,
       User,
     ]),
   ],
   controllers: [SaleController],
-  providers: [SaleService],
+  providers: [SaleService, DataGateway],
 })
 export class SaleModule {}

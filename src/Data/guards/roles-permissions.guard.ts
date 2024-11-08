@@ -1,29 +1,39 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { JwtService } from '@nestjs/jwt';
-import { ROLES_KEY } from '../decorators/roles.decorator';
+import { Permission } from '../constants/permission.enum';
+import { PERMISSIONS_KEY } from '../decorators/permission.decorator';
+import { IPayload } from '../interfaces/api/auth-interface/auth.interface';
 
 @Injectable()
 export class RolesAndPermissionsGuard implements CanActivate {
-  constructor(
-    private reflector: Reflector,
-    private jwtService: JwtService,
-  ) {}
+  constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const requiredRoles = this.reflector.getAllAndOverride<Array<string>>(
-      ROLES_KEY,
+    const requiredPermissions = this.reflector.getAllAndOverride<Permission[]>(
+      PERMISSIONS_KEY,
       [context.getHandler(), context.getClass()],
     );
 
-    if (!requiredRoles) {
+    if (!requiredPermissions) {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest();
-    const user = request.user;
-    if (!user?.rol || !requiredRoles.some((rol) => user.rol.includes(rol))) {
-      return false;
+    const user = context.switchToHttp().getRequest().user as IPayload;
+    if (!user || !user.permissions) {
+      throw new UnauthorizedException('User or permissions not found');
+    }
+
+    const hasPermission =
+      requiredPermissions.every((perm) => user.permissions.includes(perm)) ||
+      user.permissions.includes(Permission.ADMIN_ALL);
+
+    if (!hasPermission) {
+      throw new UnauthorizedException('Insufficient permissions');
     }
 
     return true;

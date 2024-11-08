@@ -3,15 +3,16 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { CostumerService } from './costumer.service';
 import { CreateCustomerDto } from './dto/create-costumer.dto';
 import { UpdateCostumerDto } from './dto/update-costumer.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Roles } from 'src/data/decorators/roles.decorator';
+import { Permission } from 'src/data/constants/permission.enum';
+import { Permissions } from 'src/data/decorators/permission.decorator';
 
 @ApiBearerAuth()
 @ApiTags('customer')
@@ -20,35 +21,35 @@ export class CostumerController {
   constructor(private readonly costumerService: CostumerService) {}
 
   @Post()
-  @Roles('admin', 'employee')
+  @Permissions(Permission.ADMIN_ALL)
   create(@Body() createCustomerDto: CreateCustomerDto) {
     return this.costumerService.create(createCustomerDto);
   }
 
   @Get()
-  @Roles('admin')
+  @Permissions(Permission.ADMIN_ALL)
   findAll() {
     return this.costumerService.findAll();
   }
 
-  @Get(':id')
-  @Roles('admin')
-  findOne(@Param('id') id: string) {
-    return this.costumerService.findOne(id);
+  @Get(':customerId')
+  @Permissions(Permission.ADMIN_ALL)
+  findOne(@Param('customerId') customerId: string) {
+    return this.costumerService.findOne(customerId);
   }
 
-  @Patch(':id')
-  @Roles('admin')
+  @Put(':customerId')
+  @Permissions(Permission.ADMIN_ALL)
   update(
-    @Param('id') id: string,
+    @Param('customerId') customerId: string,
     @Body() updateCostumerDto: UpdateCostumerDto,
   ) {
-    return this.costumerService.update(id, updateCostumerDto);
+    return this.costumerService.update(customerId, updateCostumerDto);
   }
 
-  @Delete(':id')
-  @Roles('admin')
-  remove(@Param('id') id: string) {
-    return this.costumerService.remove(id);
+  @Delete(':customerId')
+  @Permissions(Permission.ADMIN_ALL)
+  remove(@Param('customerId') customerId: string) {
+    return this.costumerService.remove(customerId);
   }
 }

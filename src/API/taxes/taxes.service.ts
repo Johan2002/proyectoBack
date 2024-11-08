@@ -1,19 +1,21 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { UpdateTaxDto } from './dto/update-tax.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Tax } from 'src/Data/entities/taxes-entity/taxes.entity';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import {
   ICreateTax,
   ITax,
+  IUpdateTax,
 } from 'src/Data/interfaces/api/taxes-interface/taxes.interface';
+import { DataGateway } from 'src/shared/socket/socket.gateway';
 
 @Injectable()
 export class TaxesService {
-  constructor(
-    @InjectRepository(Tax)
-    private readonly taxRepository: Repository<Tax>,
-  ) {}
+  @InjectRepository(Tax)
+  private readonly taxRepository: Repository<Tax>;
+
+  constructor(private readonly dataGateway: DataGateway) {}
+
   async create({ ...createTax }: ICreateTax): Promise<ITax> {
     const { taxId }: ITax = await this.taxRepository.save({
       ...createTax,
@@ -22,6 +24,9 @@ export class TaxesService {
     const tax = await this.taxRepository.findOne({
       where: { taxId },
     });
+
+    this.dataGateway.emitData({ acction: 'tax/create', data: tax });
+
     return tax;
   }
 
@@ -29,31 +34,42 @@ export class TaxesService {
     return await this.taxRepository.find();
   }
 
-  async findOne(id: string): Promise<ITax> {
+  async findOne(taxId: string): Promise<ITax> {
     const tax = await this.taxRepository.findOne({
-      where: { taxId: id },
-      relations: ['product'],
+      where: { taxId },
     });
+
     if (!tax) {
-      throw new BadRequestException('Tax not found');
+      throw new NotFoundException('Tax not found');
     }
+
     return tax;
   }
 
-  async update(id: string, updateTaxDto: UpdateTaxDto): Promise<ITax> {
-    const tax = await this.taxRepository.findOne({
-      where: { taxId: id },
-      relations: ['product'],
+  async update(taxId: string, updateTax: IUpdateTax): Promise<ITax> {
+    const updateResult: UpdateResult = await this.taxRepository.update(taxId, {
+      ...updateTax,
     });
-    if (!tax) {
-      throw new BadRequestException('Tax not found');
-    }
-    Object.assign(tax, updateTaxDto);
+
+    if (!updateResult.affected)
+      throw new NotFoundException('Tax information could not be updated.');
+
+    const tax: ITax = await this.taxRepository.findOne({
+      where: { taxId },
+    });
+
+    this.dataGateway.emitData({ acction: 'tax/update', data: tax });
+
     return tax;
   }
 
-  async remove(id: string) {
-    await this.findOne(id);
-    return await this.taxRepository.delete(id);
+  async remove(taxId: string): Promise<string> {
+    const deleteResult: DeleteResult = await this.taxRepository.delete(taxId);
+
+    if (!deleteResult) throw new NotFoundException('Tax not found.');
+
+    this.dataGateway.emitData({ acction: 'tax/delete', data: { taxId } });
+
+    return taxId;
   }
 }

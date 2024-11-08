@@ -2,7 +2,10 @@ import { UserService } from './../user/user.service';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { IAuth } from 'src/Data/interfaces/api/auth-interface/auth.interface';
+import {
+  IAuth,
+  IPayload,
+} from 'src/Data/interfaces/api/auth-interface/auth.interface';
 
 @Injectable()
 export class AuthService {
@@ -24,17 +27,19 @@ export class AuthService {
       throw new UnauthorizedException('Please verify credentials.');
     }
 
-    const payload = {
-      email: user.userEmail,
-      sub: user.userId,
-      rol: user.rol.rolName,
-    };
-    const token = await this.jwtService.signAsync(payload);
+    const permissions: string[] =
+      user?.rol?.permission?.map((permission) => permission.permissionName) ||
+      [];
 
+    delete user.userPassword;
+
+    const payload: IPayload = {
+      ...user,
+      permissions,
+    };
+    console.log('payload :>> ', payload);
+    const token = await this.jwtService.signAsync(payload);
     return {
-      email: user.userEmail,
-      sub: user.userId,
-      rol: user.rol.rolName,
       acces_token: token,
     };
   }

@@ -8,20 +8,22 @@ interface Employee {
   employeeIdentity: string;
 }
 
-interface Company {
-  companyName: string;
-  companyNit: string;
-  companyPhone: string;
-  companyAddress: string;
-  companyEmail: string;
-}
-
 interface Customer {
   customerName: string;
   customerLastname: string;
   customerIdentity: string;
   customerEmail: string;
   customerPhone: string;
+}
+
+interface Headquarter {
+  headquarterName: string;
+  headquarterAddress: string;
+  companyNit: string;
+  companyName: string;
+  companyAddress: string;
+  companyPhone: string;
+  companyEmail: string;
 }
 
 interface Sale {
@@ -61,12 +63,14 @@ interface SaleDetail {
         'employeeIdentity', em."employeeIdentity"
       ) AS employee,
       jsonb_build_object(
-          'companyName', co."companyName",
-          'companyNit', co."companyNit",
-          'companyPhone', co."companyPhone",
-          'companyAddress', co."companyAddress",
-          'companyEmail', co."companyEmail"
-      ) AS company,
+        'headquarterName', hq."headquarterName",
+        'headquarterAddress', hq."headquarterAddress",
+        'companyNit', co."companyNit",
+        'companyName', co."companyName",
+        'companyAddress', co."companyAddress",
+        'companyPhone', co."companyPhone",
+        'companyEmail', co."companyEmail"
+      ) AS headquarter,
       jsonb_agg(DISTINCT jsonb_build_object(
         'saleDetailId', sd."saleDetailId",
         'quantity', sd."quantity",
@@ -76,12 +80,12 @@ interface SaleDetail {
         'total', sd."total",
         'productCode', p."productCode",
         'productName', p."productName"
-      )) AS "sale_detail",
+      )) AS sale_detail,
       jsonb_build_object(
         'saleDate', s."saleDate",
         'saleTotalPrice', s."saleTotalPrice",
-        'subtotal' , s."subtotal",
-        'totalTaxes' , s."totalTaxes", 
+        'subtotal', s."subtotal",
+        'totalTaxes', s."totalTaxes",
         'salePaymentMethod', s."salePaymentMethod"
       ) AS sale
     FROM
@@ -89,37 +93,26 @@ interface SaleDetail {
     INNER JOIN
       "customer" cl ON s."customerCustomerId" = cl."customerId"
     INNER JOIN
-      "employee" em ON s."employeeEmployeeId" = em."employeeId"
+      "headquarter" hq ON s."headquarterHeadquarterId" = hq."headquarterId"
     INNER JOIN
-      "company" co ON s."companyCompanyId" = co."companyId"  
+      "company" co ON hq."companyCompanyId" = co."companyId"
+    INNER JOIN
+      "employee" em ON s."employeeEmployeeId" = em."employeeId"
     INNER JOIN
       "sale_detail" sd ON s."saleId" = sd."saleSaleId"
     INNER JOIN
       "product" p ON sd."productProductId" = p."productId"
-    LEFT JOIN
-      "product_tax" pt ON p."productId" = pt."productProductId"
-    LEFT JOIN
-      "tax" t ON pt."taxTaxId" = t."taxId"
     GROUP BY
       s."saleId",
-      cl."customerName",
-      cl."customerLastname",
-      cl."customerIdentity",
-      cl."customerEmail",
-      cl."customerPhone",
-      em."employeeName",
-      em."employeeLastname",
-      em."employeeEmail",
-      em."employeePhone",
-      em."employeeIdentity",
-      co."companyName",
-      co."companyNit",
-      co."companyPhone",
-      co."companyAddress",
-      co."companyEmail",
-      s."saleDate",
-      s."saleTotalPrice",
-      s."salePaymentMethod"
+      cl."customerName", cl."customerLastname", cl."customerIdentity",
+      cl."customerEmail", cl."customerPhone",
+      em."employeeName", em."employeeLastname", em."employeeEmail",
+      em."employeePhone", em."employeeIdentity",
+      hq."headquarterName", hq."headquarterAddress",
+      co."companyNit", co."companyName", co."companyAddress",
+      co."companyPhone", co."companyEmail",
+      s."saleDate", s."saleTotalPrice", s."subtotal",
+      s."totalTaxes", s."salePaymentMethod"
   `,
 })
 export class SaleView {
@@ -130,6 +123,9 @@ export class SaleView {
   customer: Customer;
 
   @ViewColumn()
+  headquarter: Headquarter;
+
+  @ViewColumn()
   sale_detail: Array<SaleDetail>;
 
   @ViewColumn()
@@ -137,7 +133,4 @@ export class SaleView {
 
   @ViewColumn()
   employee: Employee;
-
-  @ViewColumn()
-  company: Company;
 }

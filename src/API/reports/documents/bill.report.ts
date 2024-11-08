@@ -1,7 +1,7 @@
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
 import { SaleView } from 'src/data/entities/view/sale-view.entity';
 import { Formatter } from 'src/data/helpers/formatter.helper';
-import { StyleInvoice } from 'src/data/constants/styley-invoice.contant';
+import { StyleInvoice } from 'src/data/constants/style-invoice.constant';
 
 export function billReport(saleData: SaleView): TDocumentDefinitions {
   const saleDetailRows = Array.isArray(saleData.sale_detail)
@@ -54,13 +54,13 @@ export function billReport(saleData: SaleView): TDocumentDefinitions {
       {
         text: [
           {
-            text: saleData.company.companyName.toUpperCase(),
+            text: saleData.headquarter.companyName.toUpperCase(),
             style: 'h1',
             fontSize: 16,
             bold: true,
             color: '#000000',
           },
-          `\nNit: ${saleData.company.companyNit}\n${saleData.company.companyAddress}\n${saleData.company.companyPhone}\n${saleData.company.companyEmail}`,
+          `\nNit: ${saleData.headquarter.companyNit} \n${saleData.headquarter.companyAddress}\n${saleData.headquarter.companyPhone}\n${saleData.headquarter.companyEmail}`,
         ],
         margin: [0, 5],
         alignment: 'center',

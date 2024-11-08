@@ -1,19 +1,21 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { UpdateSupplierDto } from './dto/update-supplier.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Supplier } from 'src/Data/entities/supplier-entity/supplier.entity';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import {
   ICreateSupplier,
   ISupplier,
+  IUpdateSupplier,
 } from 'src/Data/interfaces/api/supplier-interface/supplier.interface';
+import { DataGateway } from 'src/shared/socket/socket.gateway';
 
 @Injectable()
 export class SupplierService {
-  constructor(
-    @InjectRepository(Supplier)
-    private readonly supplierRepository: Repository<Supplier>,
-  ) {}
+  @InjectRepository(Supplier)
+  private readonly supplierRepository: Repository<Supplier>;
+
+  constructor(private readonly dataGateway: DataGateway) {}
+
   async create({
     companyId,
     ...createSupplier
@@ -27,44 +29,60 @@ export class SupplierService {
       where: { supplierId },
     });
 
+    this.dataGateway.emitData({ acction: 'supplier/create', data: supplier });
+
     return supplier;
   }
 
   async findAll(): Promise<Array<ISupplier>> {
-    return await this.supplierRepository.find({
-      relations: ['company', 'products'],
-    });
+    return await this.supplierRepository.find({});
   }
 
-  async findOne(id: string): Promise<ISupplier> {
+  async findOne(supplierId: string): Promise<ISupplier> {
     const supplier = await this.supplierRepository.findOne({
-      where: { supplierId: id },
-      relations: ['company', 'products'],
+      where: { supplierId },
     });
+
     if (!supplier) {
-      throw new BadRequestException('Supplier not found.');
+      throw new NotFoundException('Supplier not found.');
     }
+
     return supplier;
   }
 
   async update(
-    id: string,
-    updateSupplierDto: UpdateSupplierDto,
+    supplierId: string,
+    updateSupplier: IUpdateSupplier,
   ): Promise<ISupplier> {
+    const updateResult: UpdateResult = await this.supplierRepository.update(
+      supplierId,
+      { ...updateSupplier },
+    );
+
+    if (!updateResult.affected)
+      throw new NotFoundException('Supplier information could not be updated.');
+
     const supplier = await this.supplierRepository.findOne({
-      where: { supplierId: id },
+      where: { supplierId },
     });
-    if (!supplier) {
-      throw new BadRequestException('Supplier not found.');
-    }
 
-    Object.assign(supplier, updateSupplierDto);
+    this.dataGateway.emitData({ acction: 'supplier/update', data: supplier });
 
-    return this.supplierRepository.save(supplier);
+    return supplier;
   }
 
-  async remove(id: string) {
-    await this.findOne(id);
-    return await this.supplierRepository.delete(id);
+  async remove(supplierId: string): Promise<string> {
+    const deleteResult: DeleteResult =
+      await this.supplierRepository.delete(supplierId);
+
+    if (!deleteResult.affected)
+      throw new NotFoundException('Supplier not found.');
+
+    this.dataGateway.emitData({
+      acction: 'supplier/delete',
+      data: { supplierId },
+    });
+
+    return supplierId;
   }
 }

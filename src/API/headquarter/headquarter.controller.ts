@@ -3,15 +3,16 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { HeadquarterService } from './headquarter.service';
 import { CreateHeadquarterDto } from './dto/create-headquarter.dto';
 import { UpdateHeadquarterDto } from './dto/update-headquarter.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Roles } from 'src/data/decorators/roles.decorator';
+import { Permission } from 'src/data/constants/permission.enum';
+import { Permissions } from 'src/data/decorators/permission.decorator';
 
 @ApiBearerAuth()
 @ApiTags('headquarter')
@@ -20,35 +21,35 @@ export class HeadquarterController {
   constructor(private readonly headquarterService: HeadquarterService) {}
 
   @Post()
-  @Roles('admin')
+  @Permissions(Permission.ADMIN_ALL)
   create(@Body() createHeadquarterDto: CreateHeadquarterDto) {
     return this.headquarterService.create(createHeadquarterDto);
   }
 
   @Get()
-  @Roles('admin')
+  @Permissions(Permission.ADMIN_ALL)
   findAll() {
     return this.headquarterService.findAll();
   }
 
-  @Get(':id')
-  @Roles('admin')
-  findOne(@Param('id') id: string) {
-    return this.headquarterService.findOne(id);
+  @Get(':headquarterId')
+  @Permissions(Permission.ADMIN_ALL)
+  findOne(@Param('headquarterId') headquarterId: string) {
+    return this.headquarterService.findOne(headquarterId);
   }
 
-  @Patch(':id')
-  @Roles('admin')
+  @Put(':headquarterId')
+  @Permissions(Permission.ADMIN_ALL)
   update(
-    @Param('id') id: string,
+    @Param('headquarterId') headquarterId: string,
     @Body() updateHeadquarterDto: UpdateHeadquarterDto,
   ) {
-    return this.headquarterService.update(id, updateHeadquarterDto);
+    return this.headquarterService.update(headquarterId, updateHeadquarterDto);
   }
 
-  @Delete(':id')
-  @Roles('admin')
-  remove(@Param('id') id: string) {
-    return this.headquarterService.remove(id);
+  @Delete(':headquarterId')
+  @Permissions(Permission.ADMIN_ALL)
+  remove(@Param('headquarterId') headquarterId: string) {
+    return this.headquarterService.remove(headquarterId);
   }
 }

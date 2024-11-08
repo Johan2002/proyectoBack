@@ -15,10 +15,10 @@ export class CreateSaleDto {
   @IsString()
   salePaymentMethod: string;
 
-  @ApiProperty({ description: 'ID de la empresa' })
+  @ApiProperty({ description: 'ID de la sede' })
   @IsUUID()
   @IsNotEmpty()
-  companyId: string;
+  headquarterId: string;
 
   @ApiProperty({ description: 'ID del Empleados' })
   @IsUUID()

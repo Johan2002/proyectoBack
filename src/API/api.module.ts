@@ -7,7 +7,6 @@ import { UserModule } from './user/user.module';
 import { Module } from '@nestjs/common';
 import { ProductModule } from './product/product.module';
 import { SaleModule } from './sale/sale.module';
-import { PermissionModule } from './permission/permission.module';
 import { RolModule } from './rol/rol.module';
 import { AuthModule } from './auth/auth.module';
 import { SaleDetailsModule } from './sale-details/sale-details.module';
@@ -29,7 +28,6 @@ import { PrinterModule } from './printer/printer.module';
     HeadquarterModule,
     ProductModule,
     SaleModule,
-    PermissionModule,
     RolModule,
     AuthModule,
     SaleDetailsModule,

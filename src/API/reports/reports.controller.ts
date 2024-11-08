@@ -2,6 +2,8 @@ import { Controller, Get, Header, Param, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { ReportsService } from './reports.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Permission } from 'src/data/constants/permission.enum';
+import { Permissions } from 'src/data/decorators/permission.decorator';
 
 @ApiTags('reports')
 @Controller('reports')
@@ -9,6 +11,7 @@ export class ReportsController {
   constructor(private readonly reportsService: ReportsService) {}
 
   @Get(':saleId/generate-pdf')
+  @Permissions(Permission.ADMIN_ALL)
   @ApiResponse({
     status: 200,
     description: 'PDF generado exitosamente',

@@ -21,3 +21,5 @@ export type ICreateSupplier = Pick<
   | 'supplierEmail'
 > &
   Partial<Pick<ICompany, 'companyId'>>;
+
+export type IUpdateSupplier = Partial<ICreateSupplier>;

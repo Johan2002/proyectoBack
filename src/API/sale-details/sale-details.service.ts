@@ -103,21 +103,7 @@ export class SaleDetailsService {
   }
 
   async findAll() {
-    const saleDetail = await this.detailRepository.find({
-      relations: ['sale', 'product'],
-    });
+    const saleDetail = await this.detailRepository.find();
     return saleDetail;
   }
-
-  // findOne(id: number) {
-  //   return `This action returns a #${id} saleDetail`;
-  // }
-
-  // update(id: number, updateSaleDetailDto: UpdateSaleDetailDto) {
-  //   return `This action updates a #${id} saleDetail`;
-  // }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} saleDetail`;
-  // }
 }

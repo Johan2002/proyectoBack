@@ -8,3 +8,5 @@ export interface ITax {
 }
 
 export type ICreateTax = Omit<ITax, 'taxId' | 'product'>;
+
+export type IUpdateTax = Partial<ICreateTax>;

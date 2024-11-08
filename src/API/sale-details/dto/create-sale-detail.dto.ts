@@ -23,7 +23,7 @@ export class CreateSaleDetailDto {
   @ApiProperty({ description: 'ID de la empresa' })
   @IsUUID()
   @IsNotEmpty()
-  companyId: string;
+  headquarterId: string;
 
   @ApiProperty({ description: 'ID del Clientes' })
   @IsUUID()

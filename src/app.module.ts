@@ -7,6 +7,7 @@ import { AllExceptionsFilter } from './Data/interceptor/catch/error-interceptor'
 import { ResponseInterceptor } from './Data/interceptor/response/response.interceptor';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
+import { SocketModule } from './shared/socket/socket.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ConfigModule } from '@nestjs/config';
     TypeOrmModule.forRootAsync(TypeOrmConfigAsync),
     ApiModule,
     JwtModule,
+    SocketModule,
   ],
   controllers: [],
   providers: [

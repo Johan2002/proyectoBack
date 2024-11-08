@@ -1,19 +1,21 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { UpdateHeadquarterDto } from './dto/update-headquarter.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Headquarter } from 'src/Data/entities/headquarter-entity/headquarter.entity';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import {
   ICreateHeadquarter,
   IHeadquarter,
+  IUpdateHeadquarter,
 } from 'src/Data/interfaces/api/headquarter-interface/headquarter.interface';
+import { DataGateway } from 'src/shared/socket/socket.gateway';
 
 @Injectable()
 export class HeadquarterService {
-  constructor(
-    @InjectRepository(Headquarter)
-    private readonly headquarterRepository: Repository<Headquarter>,
-  ) {}
+  @InjectRepository(Headquarter)
+  private readonly headquarterRepository: Repository<Headquarter>;
+
+  constructor(private readonly dataGateway: DataGateway) {}
+
   async create({
     companyId,
     ...createHeadquarter
@@ -28,44 +30,68 @@ export class HeadquarterService {
       where: { headquarterId },
     });
 
+    this.dataGateway.emitData({
+      acction: 'headquarter/create',
+      data: headquarter,
+    });
+
     return headquarter;
   }
 
   async findAll(): Promise<Array<IHeadquarter>> {
-    return await this.headquarterRepository.find({
-      relations: ['employees', 'company'],
-    });
+    return await this.headquarterRepository.find({});
   }
 
-  async findOne(id: string): Promise<IHeadquarter> {
+  async findOne(headquarterId: string): Promise<IHeadquarter> {
     const headquarter = await this.headquarterRepository.findOne({
-      where: { headquarterId: id },
-      relations: ['employees', 'company'],
+      where: { headquarterId },
     });
+
     if (!headquarter) {
-      throw new BadRequestException('Headquarter not found.');
+      throw new NotFoundException('Headquarter not found.');
     }
+
     return headquarter;
   }
 
   async update(
-    id: string,
-    updateHeadquarterDto: UpdateHeadquarterDto,
+    headquarterId: string,
+    updateHeadquarter: IUpdateHeadquarter,
   ): Promise<IHeadquarter> {
-    const headquarter = await this.headquarterRepository.findOne({
-      where: { headquarterId: id },
+    const updateResult: UpdateResult = await this.headquarterRepository.update(
+      headquarterId,
+      { ...updateHeadquarter },
+    );
+
+    if (!updateResult.affected)
+      throw new NotFoundException(
+        'Headquarter information could not be updated.',
+      );
+
+    const headquarter: IHeadquarter = await this.headquarterRepository.findOne({
+      where: { headquarterId },
     });
-    if (!headquarter) {
-      throw new BadRequestException('Headquarter not found.');
-    }
 
-    Object.assign(headquarter, updateHeadquarterDto);
+    this.dataGateway.emitData({
+      acction: 'headquarter/update',
+      data: headquarter,
+    });
 
-    return this.headquarterRepository.save(headquarter);
+    return headquarter;
   }
 
-  async remove(id: string) {
-    await this.findOne(id);
-    return await this.headquarterRepository.delete(id);
+  async remove(headquarterId: string): Promise<string> {
+    const deleteResult: DeleteResult =
+      await this.headquarterRepository.delete(headquarterId);
+
+    if (!deleteResult.affected)
+      throw new NotFoundException('Headquarer not found.');
+
+    this.dataGateway.emitData({
+      acction: 'headquarter/delete',
+      data: { headquarterId },
+    });
+
+    return headquarterId;
   }
 }

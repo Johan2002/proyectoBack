@@ -3,15 +3,16 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { EmployeeService } from './employee.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Roles } from 'src/data/decorators/roles.decorator';
+import { Permission } from 'src/data/constants/permission.enum';
+import { Permissions } from 'src/data/decorators/permission.decorator';
 
 @ApiBearerAuth()
 @ApiTags('employee')
@@ -20,35 +21,35 @@ export class EmployeeController {
   constructor(private readonly employeeService: EmployeeService) {}
 
   @Post()
-  @Roles('admin')
+  @Permissions(Permission.ADMIN_ALL)
   create(@Body() createEmployeeDto: CreateEmployeeDto) {
     return this.employeeService.create(createEmployeeDto);
   }
 
   @Get()
-  @Roles('admin')
+  @Permissions(Permission.ADMIN_ALL)
   findAll() {
     return this.employeeService.findAll();
   }
 
-  @Get(':id')
-  @Roles('admin')
-  findOne(@Param('id') id: string) {
-    return this.employeeService.findOne(id);
+  @Get(':employeeId')
+  @Permissions(Permission.ADMIN_ALL)
+  findOne(@Param('employeeId') employeeId: string) {
+    return this.employeeService.findOne(employeeId);
   }
 
-  @Patch(':id')
-  @Roles('admin')
+  @Put(':employeeId')
+  @Permissions(Permission.ADMIN_ALL)
   update(
-    @Param('id') id: string,
+    @Param('employeeId') employeeId: string,
     @Body() updateEmployeeDto: UpdateEmployeeDto,
   ) {
-    return this.employeeService.update(id, updateEmployeeDto);
+    return this.employeeService.update(employeeId, updateEmployeeDto);
   }
 
-  @Delete(':id')
-  @Roles('admin')
-  remove(@Param('id') id: string) {
-    return this.employeeService.remove(id);
+  @Delete(':employeeId')
+  @Permissions(Permission.ADMIN_ALL)
+  remove(@Param('employeeId') employeeId: string) {
+    return this.employeeService.remove(employeeId);
   }
 }

@@ -16,3 +16,5 @@ export type ICreateUser = Pick<
 > &
   Partial<Pick<IEmployee, 'employeeId'>> &
   Partial<Pick<IRol, 'rolId'>>;
+
+export type IUpdateUser = Partial<ICreateUser>;

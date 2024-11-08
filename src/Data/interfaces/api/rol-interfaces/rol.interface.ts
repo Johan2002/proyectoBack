@@ -11,3 +11,5 @@ export interface IRol {
 }
 
 export type ICreateRol = Pick<IRol, 'rolName' | 'rolDescription' | 'rolStatus'>;
+
+export type IUpdateRol = Partial<ICreateRol>;

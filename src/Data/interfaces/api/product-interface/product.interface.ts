@@ -16,3 +16,5 @@ export interface IProduct {
 export type ICreateProduct = Omit<IProduct, 'productId' | 'tax'> &
   Partial<Pick<ISupplier, 'supplierId'>> &
   Record<'tax', Array<Pick<ITax, 'taxId'>>>;
+
+export type IUpdateProduct = Partial<ICreateProduct>;

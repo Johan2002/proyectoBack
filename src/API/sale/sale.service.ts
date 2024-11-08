@@ -1,3 +1,4 @@
+import { DataGateway } from 'src/shared/socket/socket.gateway';
 import { SaleDetail } from './../../data/entities/sale-details-entity/sale-details.entity';
 import {
   BadRequestException,
@@ -16,27 +17,23 @@ import {
 } from 'src/Data/interfaces/api/sale-interface/sale.interface';
 import { User } from 'src/Data/entities/user-entity/user.entity';
 import { formatInTimeZone } from 'date-fns-tz';
-import { Company } from 'src/Data/entities/company-entity/company.entity';
+import { Headquarter } from 'src/Data/entities/headquarter-entity/headquarter.entity';
 
 @Injectable()
 export class SaleService {
+  @InjectRepository(Sale)
+  private readonly saleRepository: Repository<Sale>;
+  @InjectRepository(SaleDetail)
+  private readonly saleDetailRepository: Repository<SaleDetail>;
+
   constructor(
-    @InjectRepository(Sale)
-    private readonly saleRepository: Repository<Sale>,
-    @InjectRepository(Customer)
-    private readonly customerRepository: Repository<Customer>,
-    @InjectRepository(Product)
-    private readonly productRepository: Repository<Product>,
-    @InjectRepository(SaleDetail)
-    private readonly saleDetailRepository: Repository<SaleDetail>,
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
-    @InjectRepository(Company)
-    private readonly companyRepository: Repository<Company>,
     private readonly dataSource: DataSource,
+    private readonly dataGateway: DataGateway,
   ) {}
+
   async create(userId: string, createSale: ICreateSale) {
-    const { customerId, companyId, products, salePaymentMethod } = createSale;
+    const { customerId, headquarterId, products, salePaymentMethod } =
+      createSale;
 
     const productMap = new Map<
       string,
@@ -56,7 +53,7 @@ export class SaleService {
     await queryRunner.startTransaction();
 
     try {
-      const customer = await this.customerRepository.findOne({
+      const customer = await queryRunner.manager.findOne(Customer, {
         where: { customerId },
       });
 
@@ -64,15 +61,15 @@ export class SaleService {
         throw new NotFoundException('Customer not found.');
       }
 
-      const company = await this.companyRepository.findOne({
-        where: { companyId },
+      const headquarter = await queryRunner.manager.findOne(Headquarter, {
+        where: { headquarterId },
       });
 
-      if (!company) {
-        throw new NotFoundException('Company not found.');
+      if (!headquarter) {
+        throw new NotFoundException('Headquarter not found.');
       }
 
-      const user = await this.userRepository.findOne({
+      const user = await queryRunner.manager.findOne(User, {
         where: { userId },
         relations: { employee: true },
       });
@@ -88,11 +85,11 @@ export class SaleService {
         'yyyy-MM-dd HH:mm:ss.SSSXXX',
       );
 
-      const sale = this.saleRepository.create({
+      const sale = queryRunner.manager.create(Sale, {
         saleDate: new Date(nowInColombia),
         salePaymentMethod,
         employee: user.employee,
-        company,
+        headquarter,
         customer,
         subtotal: 0,
         totalTaxes: 0,
@@ -104,7 +101,7 @@ export class SaleService {
 
       for (const productDto of unifyProducts) {
         const { productId, quantity } = productDto;
-        const product = await this.productRepository.findOne({
+        const product = await queryRunner.manager.findOne(Product, {
           where: { productId },
           relations: { tax: true },
         });
@@ -131,7 +128,7 @@ export class SaleService {
 
         product.productAmount -= quantity;
 
-        await this.productRepository.save(product);
+        await queryRunner.manager.save(product);
 
         const saleDetail = this.saleDetailRepository.create({
           sale: sale,
@@ -144,7 +141,7 @@ export class SaleService {
         });
 
         saleTotalPrice += total;
-
+        console.log('saleDetail :>> ', saleDetail);
         await queryRunner.manager.save(saleDetail);
 
         sale.saleTotalPrice = saleTotalPrice;
@@ -154,6 +151,8 @@ export class SaleService {
       await queryRunner.manager.save(sale);
 
       await queryRunner.commitTransaction();
+
+      this.dataGateway.emitData({ acction: 'sale/create', data: sale });
 
       return sale;
     } catch (error) {
@@ -165,19 +164,18 @@ export class SaleService {
   }
 
   async findAll(): Promise<Array<ISale>> {
-    return await this.saleRepository.find({
-      relations: ['employee', 'customer', 'company', 'saleDetails.product.tax'],
-    });
+    return await this.saleRepository.find();
   }
 
-  async findOne(id: string): Promise<ISale> {
+  async findOne(saleId: string): Promise<ISale> {
     const sale = await this.saleRepository.findOne({
-      where: { saleId: id },
-      relations: ['employee', 'customer', 'company', 'saleDetails'],
+      where: { saleId },
     });
+
     if (!sale) {
       throw new BadRequestException('Sale not found.');
     }
+
     return sale;
   }
 }

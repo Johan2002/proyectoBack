@@ -1,19 +1,20 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { UpdateCompanyDto } from './dto/update-company.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import {
   ICompany,
   ICreateCompany,
+  IUpdateCompany,
 } from 'src/Data/interfaces/api/company-interface/company.interface';
 import { Company } from 'src/Data/entities/company-entity/company.entity';
+import { DataGateway } from 'src/shared/socket/socket.gateway';
 
 @Injectable()
 export class CompanyService {
-  constructor(
-    @InjectRepository(Company)
-    private readonly companyRepository: Repository<Company>,
-  ) {}
+  @InjectRepository(Company)
+  private readonly companyRepository: Repository<Company>;
+
+  constructor(private readonly dataGateway: DataGateway) {}
 
   async create({ ...createCompany }: ICreateCompany): Promise<ICompany> {
     const { companyId }: ICompany = await this.companyRepository.save({
@@ -24,6 +25,8 @@ export class CompanyService {
       where: { companyId },
     });
 
+    this.dataGateway.emitData({ action: 'company/create', data: company });
+
     return company;
   }
 
@@ -31,35 +34,49 @@ export class CompanyService {
     return await this.companyRepository.find();
   }
 
-  async findOne(id: string): Promise<ICompany> {
+  async findOne(companyId: string): Promise<ICompany> {
     const company = await this.companyRepository.findOne({
-      where: { companyId: id },
-      relations: ['headquarters', 'suppliers', 'customers'],
+      where: { companyId },
     });
-    if (!company) {
-      throw new BadRequestException('Company not found');
-    }
+
+    if (!company) throw new NotFoundException('Company not found');
+
     return company;
   }
 
   async update(
-    id: string,
-    updateCompanyDto: UpdateCompanyDto,
+    companyId: string,
+    updateCompany: IUpdateCompany,
   ): Promise<ICompany> {
-    const company = await this.companyRepository.findOne({
-      where: { companyId: id },
+    const updateResult: UpdateResult = await this.companyRepository.update(
+      companyId,
+      { ...updateCompany },
+    );
+
+    if (!updateResult.affected)
+      throw new NotFoundException('Company information could not be updated.');
+
+    const company: ICompany = await this.companyRepository.findOne({
+      where: { companyId },
     });
-    if (!company) {
-      throw new BadRequestException('Company not found');
-    }
 
-    Object.assign(company, updateCompanyDto);
+    this.dataGateway.emitData({ action: 'company/update', data: company });
 
-    return this.companyRepository.save(company);
+    return company;
   }
 
-  async remove(id: string) {
-    await this.findOne(id);
-    return await this.companyRepository.delete(id);
+  async remove(companyId: string): Promise<string> {
+    const deleteResult: DeleteResult =
+      await this.companyRepository.delete(companyId);
+
+    if (!deleteResult.affected)
+      throw new NotFoundException('Company not found.');
+
+    this.dataGateway.emitData({
+      action: 'company/delete',
+      data: { companyId },
+    });
+
+    return companyId;
   }
 }

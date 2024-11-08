@@ -22,3 +22,5 @@ export type ICreateCustomer = Pick<
   | 'customerEmail'
 > &
   Partial<Pick<ICompany, 'companyId'>>;
+
+export type IUpdateCustomer = Partial<ICreateCustomer>;

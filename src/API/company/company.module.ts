@@ -6,12 +6,13 @@ import { Supplier } from 'src/Data/entities/supplier-entity/supplier.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Company } from 'src/Data/entities/company-entity/company.entity';
 import { Customer } from 'src/Data/entities/customer-entity/customer.entity';
+import { DataGateway } from 'src/shared/socket/socket.gateway';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Company, Headquarter, Supplier, Customer]),
   ],
   controllers: [CompanyController],
-  providers: [CompanyService],
+  providers: [CompanyService, DataGateway],
 })
 export class CompanyModule {}

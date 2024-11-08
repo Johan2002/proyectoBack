@@ -10,7 +10,7 @@ import {
 import { Employee } from '../employee-entity/employee.entity';
 import { Customer } from '../customer-entity/customer.entity';
 import { SaleDetail } from '../sale-details-entity/sale-details.entity';
-import { Company } from '../company-entity/company.entity';
+import { Headquarter } from '../headquarter-entity/headquarter.entity';
 
 @Entity()
 export class Sale {
@@ -45,6 +45,8 @@ export class Sale {
   })
   saleDetails: Array<SaleDetail>;
 
-  @ManyToOne(() => Company, (company) => company.sales, { nullable: false })
-  company: Company;
+  @ManyToOne(() => Headquarter, (headquarter) => headquarter.sales, {
+    nullable: false,
+  })
+  headquarter: Headquarter;
 }

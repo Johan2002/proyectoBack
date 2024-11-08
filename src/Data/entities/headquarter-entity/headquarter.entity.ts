@@ -9,6 +9,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Sale } from '../sale-entity/sale.entity';
 
 @Entity()
 export class Headquarter {
@@ -32,6 +33,10 @@ export class Headquarter {
   })
   @JoinColumn()
   employees: Array<Employee>;
+
+  @OneToMany(() => Sale, (sale) => sale.headquarter, { nullable: true })
+  @JoinColumn()
+  sales: Array<Sale>;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;

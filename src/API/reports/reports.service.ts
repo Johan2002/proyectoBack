@@ -8,10 +8,8 @@ import { billReport } from './documents/bill.report';
 
 @Injectable()
 export class ReportsService {
-  constructor(
-    @InjectRepository(SaleView)
-    private saleViewRepository: Repository<SaleView>,
-  ) {}
+  @InjectRepository(SaleView)
+  private saleViewRepository: Repository<SaleView>;
 
   async generatePdf(docDefinition: TDocumentDefinitions): Promise<Buffer> {
     const fonts = {
@@ -43,10 +41,11 @@ export class ReportsService {
       if (!saleData) {
         throw new Error('Sale data not found');
       }
+
       return billReport(saleData);
     } catch (error) {
-      console.error('Error retrieving sale data:', error);
-      throw new Error('Failed to retrieve sale data');
+      console.error('Error when bringing sales data: ', error);
+      throw new Error('No sales data found.');
     }
   }
 }
