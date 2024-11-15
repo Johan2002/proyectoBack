@@ -8,6 +8,7 @@ import { ResponseInterceptor } from './Data/interceptor/response/response.interc
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
 import { SocketModule } from './shared/socket/socket.module';
+import { TasksModule } from './core/tasks/tasks.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { SocketModule } from './shared/socket/socket.module';
     ApiModule,
     JwtModule,
     SocketModule,
+    TasksModule,
   ],
   controllers: [],
   providers: [

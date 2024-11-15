@@ -43,4 +43,14 @@ export class ReportsController {
       response.status(500).send('Error generating PDF');
     }
   }
+
+  @Get('pdf/:id')
+  async getPdfFile(@Param('id') id: string, @Res() res: Response) {
+    const pdfData = await this.reportsService.getPdfFileById(id);
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename="report-${id}.pdf"`,
+    });
+    res.status(200).send(pdfData);
+  }
 }
