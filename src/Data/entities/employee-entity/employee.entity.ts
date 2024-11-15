@@ -9,6 +9,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from '../user-entity/user.entity';
+import { Inventory } from '../inventory-entity/inventory.entity';
 
 @Entity()
 export class Employee {
@@ -37,6 +38,11 @@ export class Employee {
     nullable: false,
   })
   headquarter: Headquarter;
+
+  @OneToMany(() => Inventory, (inventory) => inventory.employee, {
+    nullable: true,
+  })
+  inventory: Inventory;
 
   @OneToMany(() => Sale, (sale) => sale.employee, { nullable: true })
   sales: Array<Sale>;

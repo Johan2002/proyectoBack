@@ -29,7 +29,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('API de Ventas')
     .setDescription('Documentación de la API de ventas')
-    .setVersion('1.0')
+    .setVersion('2.0')
     .addBearerAuth()
     .build();
 

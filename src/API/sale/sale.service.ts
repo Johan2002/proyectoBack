@@ -141,7 +141,6 @@ export class SaleService {
         });
 
         saleTotalPrice += total;
-        console.log('saleDetail :>> ', saleDetail);
         await queryRunner.manager.save(saleDetail);
 
         sale.saleTotalPrice = saleTotalPrice;

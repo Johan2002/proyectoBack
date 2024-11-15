@@ -10,6 +10,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Sale } from '../sale-entity/sale.entity';
+import { Inventory } from '../inventory-entity/inventory.entity';
 
 @Entity()
 export class Headquarter {
@@ -27,6 +28,11 @@ export class Headquarter {
   })
   @JoinColumn()
   company: Company;
+
+  @OneToMany(() => Inventory, (inventory) => inventory.headquarter, {
+    nullable: true,
+  })
+  inventory: Inventory;
 
   @OneToMany(() => Employee, (employees) => employees.headquarter, {
     nullable: true,
