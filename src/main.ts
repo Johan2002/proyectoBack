@@ -15,7 +15,7 @@ async function bootstrap() {
     credentials: true,
   });
 
-  EventEmitter.defaultMaxListeners = 11;
+  EventEmitter.defaultMaxListeners = 15;
 
   app.useGlobalPipes(
     new ValidationPipe({

@@ -12,7 +12,6 @@ import {
 import { Supplier } from '../supplier-entity/supplier.entity';
 import { SaleDetail } from '../sale-details-entity/sale-details.entity';
 import { Tax } from '../taxes-entity/taxes.entity';
-import { Inventory } from '../inventory-entity/inventory.entity';
 
 @Entity()
 @Unique(['productCode', 'productName', 'supplier'])
@@ -42,9 +41,6 @@ export class Product {
     nullable: false,
   })
   supplier: Supplier;
-
-  @OneToMany(() => Inventory, (inventory) => inventory.product)
-  inventory: Inventory;
 
   @OneToMany(() => SaleDetail, (saleDetail) => saleDetail.product, {
     nullable: true,

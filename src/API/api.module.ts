@@ -18,6 +18,7 @@ import { TaxesModule } from './taxes/taxes.module';
 import { ReportsModule } from './reports/reports.module';
 import { PrinterModule } from './printer/printer.module';
 import { InventoryModule } from './inventory/inventory.module';
+import { InventoryDetailModule } from './inventory-detail/inventory-detail.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { InventoryModule } from './inventory/inventory.module';
     ReportsModule,
     PrinterModule,
     InventoryModule,
+    InventoryDetailModule,
   ],
   providers: [
     {

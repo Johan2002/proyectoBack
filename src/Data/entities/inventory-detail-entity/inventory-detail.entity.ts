@@ -2,18 +2,18 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  ManyToOne,
   CreateDateColumn,
+  ManyToOne,
 } from 'typeorm';
-import { Inventory } from '../inventory-entity/inventory.entity';
+import { Product } from '../product-entity/product.entity';
 
 @Entity()
 export class InventoryDetail {
   @PrimaryGeneratedColumn('uuid')
   inventoryDetailId: string;
 
-  @ManyToOne(() => Inventory, (inventory) => inventory.inventoryDetail)
-  inventory: Inventory;
+  @ManyToOne(() => Product)
+  product: Product;
 
   @Column({ type: 'int4' })
   quantityInicial: number;
@@ -24,6 +24,6 @@ export class InventoryDetail {
   @Column({ type: 'int4' })
   quantitySale: number;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'timestamp' })
   inventoryDate: Date;
 }

@@ -32,6 +32,7 @@ export class Headquarter {
   @OneToMany(() => Inventory, (inventory) => inventory.headquarter, {
     nullable: true,
   })
+  @JoinColumn()
   inventory: Inventory;
 
   @OneToMany(() => Employee, (employees) => employees.headquarter, {

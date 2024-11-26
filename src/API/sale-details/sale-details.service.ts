@@ -103,7 +103,9 @@ export class SaleDetailsService {
   }
 
   async findAll() {
-    const saleDetail = await this.detailRepository.find();
+    const saleDetail = await this.detailRepository.find({
+      relations: ['sale'],
+    });
     return saleDetail;
   }
 }

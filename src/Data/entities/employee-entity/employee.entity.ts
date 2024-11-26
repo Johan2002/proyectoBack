@@ -1,5 +1,5 @@
 import { Sale } from '../sale-entity/sale.entity';
-import { OneToMany, OneToOne } from 'typeorm';
+import { JoinColumn, OneToMany, OneToOne } from 'typeorm';
 import { Headquarter } from 'src/Data/entities/headquarter-entity/headquarter.entity';
 import {
   Column,
@@ -42,6 +42,7 @@ export class Employee {
   @OneToMany(() => Inventory, (inventory) => inventory.employee, {
     nullable: true,
   })
+  @JoinColumn()
   inventory: Inventory;
 
   @OneToMany(() => Sale, (sale) => sale.employee, { nullable: true })

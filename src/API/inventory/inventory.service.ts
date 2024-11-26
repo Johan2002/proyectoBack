@@ -1,31 +1,48 @@
-import { Injectable } from '@nestjs/common';
-import { UpdateInventoryDto } from './dto/update-inventory.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Inventory } from 'src/Data/entities/inventory-entity/inventory.entity';
+import {
+  ICreateInventory,
+  Iinventory,
+} from 'src/Data/interfaces/api/inventory-interface/inventory.interface';
+import { DataGateway } from 'src/shared/socket/socket.gateway';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class InventoryService {
   @InjectRepository(Inventory)
-  private readonly inventoryReposiitory: Repository<Inventory>;
+  private readonly inventoryRepository: Repository<Inventory>;
 
-  async create() {
-    return 'This action adds a new inventory';
+  constructor(private readonly dataGateway: DataGateway) {}
+
+  async create({ ...createInventory }: ICreateInventory): Promise<Iinventory> {
+    const { inventoryId }: Iinventory = await this.inventoryRepository.save({
+      ...createInventory,
+    });
+
+    const inventory = await this.inventoryRepository.findOne({
+      where: { inventoryId },
+    });
+
+    this.dataGateway.emitData({ acction: 'inventory/create', data: inventory });
+
+    return inventory;
   }
 
-  findAll() {
-    return `This action returns all inventory`;
+  async findAll(): Promise<Array<Iinventory>> {
+    return await this.inventoryRepository.find({
+      relations: ['employee', 'headquarter', 'inventoryDetail.product'],
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} inventory`;
-  }
+  async findOne(inventoryId: string): Promise<Iinventory> {
+    const inventory = await this.inventoryRepository.findOne({
+      where: { inventoryId },
+    });
 
-  update(id: number, updateInventoryDto: UpdateInventoryDto) {
-    return `This action updates a #${id} inventory`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} inventory`;
+    if (!inventory) {
+      throw new NotFoundException('Inventory not found.');
+    }
+    return inventory;
   }
 }
