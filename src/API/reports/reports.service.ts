@@ -3,9 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
 import PdfPrinter from 'pdfmake/src/printer';
-import { SaleView } from 'src/data/entities/view/sale-view.entity';
+import { SaleView } from 'src/Data/entities/view/sale-view.entity';
 import { billReport } from './documents/bill.report';
-import { PdfFile } from 'src/data/entities/pdf-entity/pdf.entity';
+import { PdfFile } from 'src/Data/entities/pdf-entity/pdf.entity';
 
 @Injectable()
 export class ReportsService {

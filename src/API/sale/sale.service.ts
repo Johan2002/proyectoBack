@@ -1,5 +1,5 @@
 import { DataGateway } from 'src/shared/socket/socket.gateway';
-import { SaleDetail } from './../../data/entities/sale-details-entity/sale-details.entity';
+import { SaleDetail } from './../../Data/entities/sale-details-entity/sale-details.entity';
 import {
   BadRequestException,
   ConflictException,

@@ -11,8 +11,8 @@ import { TaxesService } from './taxes.service';
 import { CreateTaxDto } from './dto/create-tax.dto';
 import { UpdateTaxDto } from './dto/update-tax.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Permission } from 'src/data/constants/permission.enum';
-import { Permissions } from 'src/data/decorators/permission.decorator';
+import { Permissions } from 'src/Data/decorators/permission.decorator';
+import { Permission } from 'src/Data/constants/permission.enum';
 
 @ApiBearerAuth()
 @ApiTags('taxes')

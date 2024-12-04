@@ -1,7 +1,7 @@
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
-import { SaleView } from 'src/data/entities/view/sale-view.entity';
-import { Formatter } from 'src/data/helpers/formatter.helper';
-import { StyleInvoice } from 'src/data/constants/style-invoice.constant';
+import { SaleView } from 'src/Data/entities/view/sale-view.entity';
+import { Formatter } from 'src/Data/helpers/formatter.helper';
+import { StyleInvoice } from 'src/Data/constants/style-invoice.constant';
 
 export function billReport(saleData: SaleView): TDocumentDefinitions {
   const saleDetailRows = Array.isArray(saleData.sale_detail)

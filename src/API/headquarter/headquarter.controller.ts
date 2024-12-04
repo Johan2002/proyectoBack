@@ -11,8 +11,8 @@ import { HeadquarterService } from './headquarter.service';
 import { CreateHeadquarterDto } from './dto/create-headquarter.dto';
 import { UpdateHeadquarterDto } from './dto/update-headquarter.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Permission } from 'src/data/constants/permission.enum';
-import { Permissions } from 'src/data/decorators/permission.decorator';
+import { Permissions } from 'src/Data/decorators/permission.decorator';
+import { Permission } from 'src/Data/constants/permission.enum';
 
 @ApiBearerAuth()
 @ApiTags('headquarter')

@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PdfFile } from 'src/data/entities/pdf-entity/pdf.entity';
+import { PdfFile } from 'src/Data/entities/pdf-entity/pdf.entity';
 import { Product } from 'src/Data/entities/product-entity/product.entity';
 import { Repository } from 'typeorm';
 

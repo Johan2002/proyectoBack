@@ -2,8 +2,8 @@ import { Controller, Get, Header, Param, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { ReportsService } from './reports.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Permission } from 'src/data/constants/permission.enum';
-import { Permissions } from 'src/data/decorators/permission.decorator';
+import { Permissions } from 'src/Data/decorators/permission.decorator';
+import { Permission } from 'src/Data/constants/permission.enum';
 
 @ApiTags('reports')
 @Controller('reports')

@@ -11,8 +11,8 @@ import { SupplierService } from './supplier.service';
 import { CreateSupplierDto } from './dto/create-supplier.dto';
 import { UpdateSupplierDto } from './dto/update-supplier.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Permission } from 'src/data/constants/permission.enum';
-import { Permissions } from 'src/data/decorators/permission.decorator';
+import { Permissions } from 'src/Data/decorators/permission.decorator';
+import { Permission } from 'src/Data/constants/permission.enum';
 
 @ApiBearerAuth()
 @ApiTags('supplier')

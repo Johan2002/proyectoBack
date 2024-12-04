@@ -13,10 +13,10 @@ import { SaleDetailsModule } from './sale-details/sale-details.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from 'src/Data/guards/auth.guard';
 import { JwtModule } from '@nestjs/jwt';
-import { RolesAndPermissionsGuard } from 'src/data/guards/roles-permissions.guard';
 import { TaxesModule } from './taxes/taxes.module';
 import { ReportsModule } from './reports/reports.module';
 import { PrinterModule } from './printer/printer.module';
+import { RolesAndPermissionsGuard } from 'src/Data/guards/roles-permissions.guard';
 
 @Module({
   imports: [

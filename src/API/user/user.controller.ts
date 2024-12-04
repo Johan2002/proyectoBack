@@ -12,8 +12,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Public } from 'src/Data/decorators/public.decorator';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Permissions } from 'src/data/decorators/permission.decorator';
-import { Permission } from 'src/data/constants/permission.enum';
+import { Permissions } from 'src/Data/decorators/permission.decorator';
+import { Permission } from 'src/Data/constants/permission.enum';
 
 @ApiBearerAuth()
 @ApiTags('user')

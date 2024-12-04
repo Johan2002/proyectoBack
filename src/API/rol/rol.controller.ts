@@ -3,8 +3,8 @@ import { RolService } from './rol.service';
 import { CreateRolDto } from './dto/create-rol.dto';
 import { UpdateRolDto } from './dto/update-rol.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Permission } from 'src/data/constants/permission.enum';
-import { Permissions } from 'src/data/decorators/permission.decorator';
+import { Permission } from 'src/Data/constants/permission.enum';
+import { Permissions } from 'src/Data/decorators/permission.decorator';
 
 @ApiBearerAuth()
 @ApiTags('rol')
