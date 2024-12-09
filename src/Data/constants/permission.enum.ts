@@ -1,4 +1,4 @@
-export enum Permission {
+export enum EPermission {
   //Permisos admin
   ADMIN_ALL = 'ALL_PERMISSION',
   // Permisos de usuario
@@ -22,4 +22,8 @@ export enum Permission {
   // Permisos de reportes
   REPORT_VIEW = 'REPORT_VIEW',
   REPORT_GENERATE = 'REPORT_GENERATE',
+
+  TEST = 'TEST',
+  TEST2 = 'TEST2',
+  TEST4 = 'TEST4',
 }

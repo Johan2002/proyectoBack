@@ -17,6 +17,7 @@ import { TaxesModule } from './taxes/taxes.module';
 import { ReportsModule } from './reports/reports.module';
 import { PrinterModule } from './printer/printer.module';
 import { RolesAndPermissionsGuard } from 'src/Data/guards/roles-permissions.guard';
+import { PermissionModule } from './permission/permission.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { RolesAndPermissionsGuard } from 'src/Data/guards/roles-permissions.guar
     TaxesModule,
     ReportsModule,
     PrinterModule,
+    PermissionModule,
   ],
   providers: [
     {

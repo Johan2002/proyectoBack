@@ -13,7 +13,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Public } from 'src/Data/decorators/public.decorator';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Permissions } from 'src/Data/decorators/permission.decorator';
-import { Permission } from 'src/Data/constants/permission.enum';
+import { EPermission } from 'src/Data/constants/permission.enum';
 
 @ApiBearerAuth()
 @ApiTags('user')
@@ -28,19 +28,19 @@ export class UserController {
   }
 
   @Get()
-  @Permissions(Permission.ADMIN_ALL)
+  @Permissions(EPermission.ADMIN_ALL)
   findAll() {
     return this.userService.findAll();
   }
 
   @Get(':userId')
-  @Permissions(Permission.ADMIN_ALL)
+  @Permissions(EPermission.ADMIN_ALL)
   findOne(@Param('userId') userId: string) {
     return this.userService.findOne(userId);
   }
 
   @Put(':userId')
-  @Permissions(Permission.ADMIN_ALL)
+  @Permissions(EPermission.ADMIN_ALL)
   update(
     @Param('userId') userId: string,
     @Body() updateUserDto: UpdateUserDto,
@@ -49,7 +49,7 @@ export class UserController {
   }
 
   @Delete(':userId')
-  @Permissions(Permission.ADMIN_ALL)
+  @Permissions(EPermission.ADMIN_ALL)
   remove(@Param('userId') userId: string) {
     return this.userService.remove(userId);
   }

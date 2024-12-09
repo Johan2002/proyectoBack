@@ -7,7 +7,7 @@ import {
 export const TypeOrmConfigAsync: TypeOrmModuleAsyncOptions = {
   useFactory: async (): Promise<TypeOrmModuleOptions> => {
     const logger: Logger = new Logger('TypeOrmConfig');
-    logger.log('Inicializando base de datos...');
+    logger.log('Initializing database...');
 
     return {
       type: process.env.DATABASE_TYPE as 'postgres',
@@ -23,6 +23,7 @@ export const TypeOrmConfigAsync: TypeOrmModuleAsyncOptions = {
       logger: 'file',
       autoLoadEntities: true,
       // synchronize: process.env.DATABASE_SYNC === 'true' ? true : false,
+      logging: true,
       extra: {
         max: 10,
       },

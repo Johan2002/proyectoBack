@@ -12,7 +12,7 @@ import { CreateHeadquarterDto } from './dto/create-headquarter.dto';
 import { UpdateHeadquarterDto } from './dto/update-headquarter.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Permissions } from 'src/Data/decorators/permission.decorator';
-import { Permission } from 'src/Data/constants/permission.enum';
+import { EPermission } from 'src/Data/constants/permission.enum';
 
 @ApiBearerAuth()
 @ApiTags('headquarter')
@@ -21,25 +21,25 @@ export class HeadquarterController {
   constructor(private readonly headquarterService: HeadquarterService) {}
 
   @Post()
-  @Permissions(Permission.ADMIN_ALL)
+  @Permissions(EPermission.ADMIN_ALL)
   create(@Body() createHeadquarterDto: CreateHeadquarterDto) {
     return this.headquarterService.create(createHeadquarterDto);
   }
 
   @Get()
-  @Permissions(Permission.ADMIN_ALL)
+  @Permissions(EPermission.ADMIN_ALL)
   findAll() {
     return this.headquarterService.findAll();
   }
 
   @Get(':headquarterId')
-  @Permissions(Permission.ADMIN_ALL)
+  @Permissions(EPermission.ADMIN_ALL)
   findOne(@Param('headquarterId') headquarterId: string) {
     return this.headquarterService.findOne(headquarterId);
   }
 
   @Put(':headquarterId')
-  @Permissions(Permission.ADMIN_ALL)
+  @Permissions(EPermission.ADMIN_ALL)
   update(
     @Param('headquarterId') headquarterId: string,
     @Body() updateHeadquarterDto: UpdateHeadquarterDto,
@@ -48,7 +48,7 @@ export class HeadquarterController {
   }
 
   @Delete(':headquarterId')
-  @Permissions(Permission.ADMIN_ALL)
+  @Permissions(EPermission.ADMIN_ALL)
   remove(@Param('headquarterId') headquarterId: string) {
     return this.headquarterService.remove(headquarterId);
   }
